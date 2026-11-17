@@ -40,6 +40,20 @@ public class DataBaseHistoryLocation extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
+    @Override
+    public void onOpen(SQLiteDatabase sqLiteDatabase) {
+        super.onOpen(sqLiteDatabase);
+
+        /* 旧版本曾把百度逆地理编码的失败提示当成位置名保存，清掉这些无效记录 */
+        try {
+            sqLiteDatabase.delete(TABLE_NAME,
+                    DB_COLUMN_LOCATION + " LIKE ? OR " + DB_COLUMN_LOCATION + " LIKE ?",
+                    new String[]{"%被用户自己禁用%", "%控制台解禁%"});
+        } catch (Exception e) {
+            XLog.e("DATABASE: cleanup error");
+        }
+    }
+
     // 保存选择的位置
     public static void saveHistoryLocation(SQLiteDatabase sqLiteDatabase, ContentValues contentValues) {
         try {

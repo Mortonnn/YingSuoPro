@@ -59,6 +59,15 @@ public class FragmentSettings extends PreferenceFragmentCompat {
         EditTextPreference pfAltitude = findPreference("setting_altitude");
         setupDecimalEditTextPreference(pfAltitude);
 
+        EditTextPreference pfRouteSpeed = findPreference("setting_route_speed");
+        setupDecimalEditTextPreference(pfRouteSpeed);
+
+        EditTextPreference pfRouteSpeedFloat = findPreference("setting_route_speed_float");
+        setupDecimalEditTextPreference(pfRouteSpeedFloat);
+
+        EditTextPreference pfRouteInterval = findPreference("setting_route_interval");
+        setupDecimalEditTextPreference(pfRouteInterval);
+
         EditTextPreference pfLatOffset = findPreference("setting_lat_max_offset");
         setupDecimalEditTextPreference(pfLatOffset);
 

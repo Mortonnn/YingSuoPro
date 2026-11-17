@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">影梭</string>
+    <string name="app_name">影梭Pro</string>
     <string name="app_settings">设置</string>
     <string name="app_history">历史记录</string>
-    <string name="app_author">ZCShou</string>
-    <string name="app_email">zcsexp@gmail.com</string>
-    <string name="app_statement">仅供学习使用，否则后果自负！</string>
+    <string name="app_author">Mortonnn</string>
+    <string name="app_email">https://github.com/Mortonnn</string>
+    <string name="app_statement">仅供学习使用，请遵守当地法律法规</string>
     <string name="app_service_tips">影梭服务正在运行中</string>
     <string name="app_agreement">用户协议</string>
     <string name="app_agreement_content">"1. 本软件专为学习 Android 开发使用，不会收集任何用户数据。"
@@ -34,13 +34,14 @@
     <string name="app_error_input_null">输入不能为空，请重新输入内容</string>
     <string name="app_error_search">查找失败，请检查网络或定位</string>
     <string name="app_error_location">请先选择位置</string>
-    <string name="app_error_dev">开发者模式未开启，无法跳转！请自行搜索开启方法</string>
-    <string name="app_error_param">非法参数</string>
-    <string name="app_error_protocol">请先阅读并接收用户协议</string>
+    <string name="app_location_wait">正在定位，请稍后重试</string>
+    <string name="app_error_dev">开发者模式未开启，无法跳转。请自行搜索开启方法。</string>
+    <string name="app_error_param">参数无效</string>
+    <string name="app_error_protocol">请先阅读并接受用户协议</string>
     <string name="app_error_username">用户名不合法</string>
     <string name="app_error_code">注册码不能为空</string>
-    <string name="app_error_longitude">经度超出限制!\n取值：-180.0 ~ 180.0</string>
-    <string name="app_error_latitude">纬度超出限制!\n取值：-90.0 ~ 90.0</string>
+    <string name="app_error_longitude">经度超出范围，取值 -180.0 ~ 180.0</string>
+    <string name="app_error_latitude">纬度超出范围，取值 -90.0 ~ 90.0</string>
     <string name="app_search_null">没有匹配结果，请重新搜索</string>
     <string name="app_search_tips">请输入查找内容</string>
     <string name="app_location_ok">位置已传送</string>
@@ -48,7 +49,9 @@
     <string name="app_location_save">位置已保存</string>
 
     <!-- 欢迎页 -->
-    <string name="welcome_btn_txt">进入应用</string>
+    <string name="welcome_title">影梭Pro</string>
+    <string name="welcome_subtitle">自由控制移动，规划你的路线</string>
+    <string name="welcome_btn_txt">开始使用</string>
     <string name="app_btn_agree">同意并继续</string>
     <string name="app_btn_disagree">不同意</string>
 
@@ -63,6 +66,10 @@
     <string name="setting_bike_default">10.0</string>
     <string name="setting_altitude">海拔高度(米)</string>
     <string name="setting_altitude_default">55.0</string>
+
+    <!-- 路线模拟相关参数 -->
+    <string name="setting_group_route">路线模拟</string>
+    <string name="route_setting_speed">运动速度(米/秒)</string>
 
     <!-- 位置偏移相关参数 -->
     <string name="setting_group_location_offset">位置偏移</string>
@@ -84,7 +91,7 @@
     <string name="history_expiration">7</string>
     <string name="history_location_default_name">地图位置</string>
     <string name="history_idle">暂无历史记录</string>
-    <string name="history_delete_ok">删除成功！</string>
+    <string name="history_delete_ok">已删除</string>
     <string name="history_delete_error">删除记录失败</string>
     <string name="history_error_location">定位失败，请手动选取定位点</string>
     <string name="history_error_search">未搜索到指定内容</string>
@@ -105,13 +112,15 @@
     <string name="nav_drawer_open">打开导航菜单</string>
     <string name="nav_drawer_close">关闭导航菜单</string>
     <string name="nav_menu_history">历史记录</string>
+    <string name="nav_menu_route">路线模拟</string>
     <string name="nav_menu_settings">设置</string>
     <string name="nav_menu_dev">开发人员选项</string>
     <string name="nav_menu_more">更多</string>
     <string name="nav_menu_upgrade">检测更新</string>
     <string name="nav_menu_feedback">问题反馈</string>
-    <string name="nav_menu_contact">联系作者</string>
-    <string name="nav_app_tips">仅供学习使用，否则后果自负!</string>
+    <string name="nav_menu_contact">项目主页</string>
+    <string name="nav_app_tips">仅供学习使用，请遵守当地法律法规</string>
+    <string name="nav_app_subtitle">路线模拟增强版</string>
 
     <!-- 主界面 -->
     <string name="label_longitude">经度</string>
@@ -129,10 +138,54 @@
     <string name="map_pic_sate">卫星图</string>
     <string name="map_pic_normal">普通图</string>
 
+    <!-- 路线模拟 -->
+    <string name="route_title">路线模拟</string>
+    <string name="route_btn_add_point">添加途经点</string>
+    <string name="route_map_tips">拖动地图，把准星对准要途经的位置，再点击下方的加号添加途经点</string>
+    <string name="route_map_tip_short">拖动地图，对准点</string>
+    <string name="route_point_count">途经点: %1$d</string>
+    <string name="route_length">长度: %1$s</string>
+    <string name="route_speed">速度: %1$s m/s</string>
+    <string name="route_speed_title">速/频</string>
+    <string name="route_status_idle">未运行</string>
+    <string name="route_status_run">正在运行</string>
+    <string name="route_status_pause">已暂停</string>
+    <string name="route_btn_undo">撤销</string>
+    <string name="route_btn_clear">清空</string>
+    <string name="route_btn_save">保存</string>
+    <string name="route_btn_history">历史路线</string>
+    <string name="route_btn_pause">暂停</string>
+    <string name="route_btn_resume">继续</string>
+    <string name="route_error_point">请至少添加两个途经点</string>
+    <string name="route_error_save">保存路线失败</string>
+    <string name="route_error_delete">删除路线失败</string>
+    <string name="route_save_ok">路线已保存</string>
+    <string name="route_delete_ok">已删除</string>
+    <string name="route_history_idle">暂无历史路线</string>
+    <string name="route_history_title">历史路线</string>
+    <string name="route_name_title">路线名称</string>
+    <string name="route_menu_rename">重命名</string>
+    <string name="route_menu_delete">删除</string>
+    <string name="route_menu_load">载入路线</string>
+    <string name="route_start_ok">路线模拟已启动</string>
+    <string name="route_stop_ok">路线模拟已停止</string>
+    <string name="route_pause_ok">路线模拟已暂停</string>
+    <string name="route_resume_ok">路线模拟已恢复</string>
+    <string name="route_finish">路线模拟完成</string>
+    <string name="route_service_running">路线模拟服务正在运行中</string>
+    <string name="route_setting_speed_float">速度浮动(百分比)</string>
+    <string name="route_setting_interval">定位刷新频率(毫秒/次)</string>
+    <string name="route_setting_loop">循环次数(0为无限)</string>
+    <string name="route_setting_altitude">海拔高度(米)</string>
+    <string name="route_speed_default">3.5</string>
+    <string name="route_speed_float_default">10</string>
+    <string name="route_interval_default">200</string>
+    <string name="route_loop_default">0</string>
+
     <!-- 更新 -->
     <string name="update_title">新版本可用</string>
-    <string name="update_downloading">升级文件下载中。。。</string>
-    <string name="update_last">恭喜，影梭已是最新版</string>
+    <string name="update_downloading">正在下载更新</string>
+    <string name="update_last">影梭已是最新版</string>
     <string name="update_download">立即下载</string>
     <string name="update_ignore">忽略一次</string>
     <string name="update_time">更新时间：</string>

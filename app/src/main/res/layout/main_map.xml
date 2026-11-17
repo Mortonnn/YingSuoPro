@@ -14,101 +14,113 @@
 
         <com.baidu.mapapi.map.MapView
             android:id="@+id/bdMapView"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:clickable="true"
             android:focusable="true" />
 
         <RadioGroup
             android:id="@+id/RadioGroupMapType"
-            android:layout_width="90dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
-            android:layout_marginEnd="5dp"
-            android:layout_marginTop="4dip"
-            android:orientation="vertical">
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/bg_map_controls"
+            android:orientation="vertical"
+            android:padding="4dp">
 
             <RadioButton
                 android:id="@+id/mapNormal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_height="40dp"
+                android:buttonTint="@color/colorPrimary"
                 android:checked="true"
-                android:minHeight="48dp"
+                android:minHeight="40dp"
+                android:paddingStart="4dp"
+                android:paddingEnd="8dp"
                 android:text="@string/map_pic_normal"
-                android:textColor="#00796B" />
+                android:textColor="@color/on_surface"
+                android:textSize="13sp" />
 
             <RadioButton
                 android:id="@+id/mapSatellite"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:minHeight="48dp"
+                android:layout_height="40dp"
+                android:buttonTint="@color/colorPrimary"
+                android:minHeight="40dp"
+                android:paddingStart="4dp"
+                android:paddingEnd="8dp"
                 android:text="@string/map_pic_sate"
-                android:textColor="#00796B" />
+                android:textColor="@color/on_surface"
+                android:textSize="13sp" />
         </RadioGroup>
 
-        <ImageButton
-            android:id="@+id/cur_position"
+        <LinearLayout
+            android:id="@+id/map_control_stack"
             android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="350dp"
-            android:layout_marginEnd="10dp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/cur_position"
-            android:theme="@style/RippleWhite"
-            app:srcCompat="@drawable/ic_home_position"
-            app:tint="@color/colorAccent" />
+            android:layout_marginTop="132dp"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/bg_map_controls"
+            android:elevation="2dp"
+            android:orientation="vertical"
+            android:padding="2dp">
 
-        <ImageButton
-            android:id="@+id/zoom_in"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="383dp"
-            android:layout_marginEnd="10dp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/zoom_in"
-            android:theme="@style/RippleWhite"
-            app:srcCompat="@drawable/ic_zoom_in"
-            app:tint="@color/colorAccent" />
+            <ImageButton
+                android:id="@+id/input_pos"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/input_button"
+                app:srcCompat="@drawable/ic_input"
+                app:tint="@color/colorPrimary" />
 
-        <ImageButton
-            android:id="@+id/zoom_out"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="416dp"
-            android:layout_marginEnd="10dp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/zoom_out"
-            android:theme="@style/RippleWhite"
-            app:srcCompat="@drawable/ic_zoom_out"
-            app:tint="@color/colorAccent" />
+            <ImageButton
+                android:id="@+id/cur_position"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/cur_position"
+                app:srcCompat="@drawable/ic_home_position"
+                app:tint="@color/colorPrimary" />
 
-        <ImageButton
-            android:id="@+id/input_pos"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="240dp"
-            android:layout_marginEnd="10dp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/input_button"
-            android:theme="@style/RippleWhite"
-            app:srcCompat="@drawable/ic_input"
-            app:tint="@color/colorAccent" />
+            <ImageButton
+                android:id="@+id/zoom_in"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/zoom_in"
+                app:srcCompat="@drawable/ic_zoom_in"
+                app:tint="@color/colorPrimary" />
 
+            <ImageButton
+                android:id="@+id/zoom_out"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/zoom_out"
+                app:srcCompat="@drawable/ic_zoom_out"
+                app:tint="@color/colorPrimary" />
+        </LinearLayout>
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:gravity="center_horizontal|center_vertical"
-            android:textSize="10sp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/bg_map_tip"
+            android:paddingStart="10dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="4dp"
             android:text="@string/app_statement"
-            tools:ignore="SmallSp" />
+            android:textColor="@color/on_surface_variant"
+            android:textSize="12sp" />
     </RelativeLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

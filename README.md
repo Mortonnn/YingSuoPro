@@ -1,8 +1,8 @@
-# 影梭
+# 影梭Pro
 
-影梭（VirtGO）是一款 Android 位置模拟应用，支持地图选点、位置搜索、坐标输入、线路移动和悬浮摇杆，并提供位置与线路的收藏、历史记录和 GPX 导入导出。“影”寓意位置的影子，“梭”寓意在位置与线路之间穿梭。
+影梭Pro（VirtGO）是一款 Android 位置模拟应用，支持地图选点、位置搜索、坐标输入、线路移动和悬浮摇杆，并提供位置与线路的收藏、历史记录和 GPX 导入导出。本仓库基于影梭（GoGoGo）维护，额外提供路线模拟能力。“影”寓意位置的影子，“梭”寓意在位置与线路之间穿梭。
 
-[查看发布版本](https://github.com/ZCShou/GoGoGo/releases) · [问题反馈](https://github.com/ZCShou/GoGoGo/issues)
+[查看发布版本](https://github.com/Mortonnn/YingSuoPro/releases) · [问题反馈](https://github.com/Mortonnn/YingSuoPro/issues)
 
 ## 1. 功能
 
@@ -56,7 +56,7 @@
 
 ### 2.1 取得应用
 
-从 [GitHub Releases](https://github.com/ZCShou/GoGoGo/releases) 选择需要的版本，在 Assets 中下载 APK 并安装。应用内“关于影梭”可查看当前版本和检查更新。
+从 [GitHub Releases](https://github.com/Mortonnn/YingSuoPro/releases) 选择需要的版本，在 Assets 中下载 APK 并安装。应用内“关于影梭”可查看当前版本和检查更新。
 
 ### 2.2 配置权限
 
@@ -80,4 +80,4 @@
 
 ### 3.2 问题反馈
 
-通过 [GitHub Issues](https://github.com/ZCShou/GoGoGo/issues) 或应用内“帮助与反馈”提交问题时，请提供影梭版本、手机型号、Android 版本、使用的位置或线路模式、权限状态与复现步骤。分享地图、线路文件或截图前，请检查是否包含家庭地址等个人信息。
+通过 [GitHub Issues](https://github.com/Mortonnn/YingSuoPro/issues) 或应用内“帮助与反馈”提交问题时，请提供影梭版本、手机型号、Android 版本、使用的位置或线路模式、权限状态与复现步骤。分享地图、线路文件或截图前，请检查是否包含家庭地址等个人信息。

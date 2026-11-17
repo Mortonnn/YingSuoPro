@@ -46,6 +46,33 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        app:title="@string/setting_group_route"
+        app:iconSpaceReserved="false">
+
+        <EditTextPreference
+            app:key="setting_route_speed"
+            app:title="@string/route_setting_speed"
+            app:defaultValue="@string/route_speed_default"
+            app:summary="@string/route_speed_default"
+            app:iconSpaceReserved="false"/>
+
+        <EditTextPreference
+            app:key="setting_route_speed_float"
+            app:title="@string/route_setting_speed_float"
+            app:defaultValue="@string/route_speed_float_default"
+            app:summary="@string/route_speed_float_default"
+            app:iconSpaceReserved="false"/>
+
+        <EditTextPreference
+            app:key="setting_route_interval"
+            app:title="@string/route_setting_interval"
+            app:defaultValue="@string/route_interval_default"
+            app:summary="@string/route_interval_default"
+            app:iconSpaceReserved="false"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
         app:title="@string/setting_group_location_offset"
         app:iconSpaceReserved="false">
 

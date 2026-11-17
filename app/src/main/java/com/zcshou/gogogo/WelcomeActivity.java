@@ -276,6 +276,9 @@ public class WelcomeActivity extends AppCompatActivity {
         if (mPrivacy && mAgreement) {
             checkBox.setChecked(true);
             checkDefaultPermissions();
+            if (isPermission) {
+                startMainActivity();
+            }
         } else {
             checkBox.setChecked(false);
         }

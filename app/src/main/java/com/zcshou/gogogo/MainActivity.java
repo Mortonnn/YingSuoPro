@@ -118,6 +118,14 @@ public class MainActivity extends BaseActivity implements SensorEventListener {
     public static final String POI_LONGITUDE = "POI_LONGITUDE";
     public static final String POI_LATITUDE = "POI_LATITUDE";
 
+    /* 路线模拟相关的参数，由 RouteActivity 传入 ServiceGo */
+    public static final String ROUTE_MSG_ID = "ROUTE_POINTS";
+    public static final String ROUTE_SPEED_MSG_ID = "ROUTE_SPEED";
+    public static final String ROUTE_SPEED_FLOAT_MSG_ID = "ROUTE_SPEED_FLOAT";
+    public static final String ROUTE_INTERVAL_MSG_ID = "ROUTE_INTERVAL";
+    public static final String ROUTE_LOOP_MSG_ID = "ROUTE_LOOP";
+    public static final String ROUTE_ALTITUDE_MSG_ID = "ROUTE_ALTITUDE";
+
     private OkHttpClient mOkHttpClient;
     private SharedPreferences sharedPreferences;
 
@@ -211,7 +219,8 @@ public class MainActivity extends BaseActivity implements SensorEventListener {
 
         initUpdateVersion();
 
-        checkUpdateVersion(false);
+        /* 启动时不再自动检查更新，避免误弹旧版本更新框；检测更新保留在侧边栏手动入口 */
+        // checkUpdateVersion(false);
     }
 
     @Override
@@ -247,8 +256,7 @@ public class MainActivity extends BaseActivity implements SensorEventListener {
             unbindService(mConnection); // 解绑服务，服务要记得解绑，不要造成内存泄漏
             Intent serviceGoIntent = new Intent(MainActivity.this, ServiceGo.class);
             stopService(serviceGoIntent);
-        }
-        unregisterReceiver(mDownloadBdRcv);
+        }        unregisterReceiver(mDownloadBdRcv);
 
         mSensorManager.unregisterListener(this);
 
@@ -416,6 +424,10 @@ public class MainActivity extends BaseActivity implements SensorEventListener {
                 Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
 
                 startActivity(intent);
+            } else if (id == R.id.nav_route) {
+                Intent intent = new Intent(MainActivity.this, RouteActivity.class);
+
+                startActivity(intent);
             } else if (id == R.id.nav_settings) {
                 Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(intent);
@@ -430,13 +442,11 @@ public class MainActivity extends BaseActivity implements SensorEventListener {
                         GoUtils.DisplayToast(this, getResources().getString(R.string.app_error_dev));
                     }
                 }
-            } else if (id == R.id.nav_update) {
-                checkUpdateVersion(true);
             } else if (id == R.id.nav_feedback) {
                 File file = new File(getExternalFilesDir("Logs"), GoApplication.LOG_FILE_NAME);
                 ShareUtils.shareFile(this, file, item.getTitle().toString());
             } else if (id == R.id.nav_contact) {
-                Uri uri = Uri.parse("https://gitee.com/itexp/gogogo/issues");
+                Uri uri = Uri.parse("https://github.com/Mortonnn/YingSuoPro");
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
             }
@@ -574,6 +584,17 @@ public class MainActivity extends BaseActivity implements SensorEventListener {
                         return;
                     }
 
+                    int locType = bdLocation.getLocType();
+                    if (locType == BDLocation.TypeCriteriaException || locType == BDLocation.TypeNetWorkException) {
+                        mLocClient.requestLocation();
+                        return;
+                    }
+                    if (isZeroCoordinate(bdLocation.getLatitude(), bdLocation.getLongitude())) {
+                        /* 定位失败时百度会回调 (0,0)，不能把它当成当前位置 */
+                        mLocClient.requestLocation();
+                        return;
+                    }
+
                     mCurrentCity = bdLocation.getCity();
                     mCurrentLat = bdLocation.getLatitude();
                     mCurrentLon = bdLocation.getLongitude();
@@ -650,7 +671,7 @@ public class MainActivity extends BaseActivity implements SensorEventListener {
         //可选，默认false，设置是否需要POI结果，可以在BDLocation.getPoiList里得到
         locationOption.setIsNeedLocationPoiList(false);
         //可选，默认false，设置是否收集CRASH信息，默认收集
-        locationOption.setIgnoreCacheException(true);
+        locationOption.SetIgnoreCacheException(true);
         //可选，默认false，设置是否开启Gps定位
         //locationOption.setOpenGps(true);
         locationOption.setOpenGnss(true);
@@ -745,19 +766,44 @@ public class MainActivity extends BaseActivity implements SensorEventListener {
     }
 
     private void resetMap() {
+        double latitude = mCurrentLat;
+        double longitude = mCurrentLon;
+
+        /* 定位尚未回调时 mCurrentLat/mCurrentLon 仍为 0，直接跳转会到几内亚湾。
+         * 优先取地图图层已拿到的定位，仍为空则请求一次定位并等待回调。 */
+        if (isZeroCoordinate(latitude, longitude)) {
+            MyLocationData locationData = mBaiduMap.getLocationData();
+            if (locationData != null) {
+                latitude = locationData.latitude;
+                longitude = locationData.longitude;
+            }
+        }
+
+        if (isZeroCoordinate(latitude, longitude)) {
+            if (mLocClient != null) {
+                mLocClient.requestLocation();
+            }
+            GoUtils.DisplayToast(this, getResources().getString(R.string.app_location_wait));
+            return;
+        }
+
         mBaiduMap.clear();
         mMarkLatLngMap = null;
 
         MyLocationData locData = new MyLocationData.Builder()
-                .latitude(mCurrentLat)
-                .longitude(mCurrentLon)
+                .latitude(latitude)
+                .longitude(longitude)
                 .direction(mCurrentDirection)
                 .build();
         mBaiduMap.setMyLocationData(locData);
 
         MapStatus.Builder builder = new MapStatus.Builder();
-        builder.target(new LatLng(mCurrentLat, mCurrentLon)).zoom(18.0f);
+        builder.target(new LatLng(latitude, longitude)).zoom(18.0f);
         mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
+    }
+
+    private boolean isZeroCoordinate(double latitude, double longitude) {
+        return Math.abs(latitude) < 0.000001 && Math.abs(longitude) < 0.000001;
     }
 
     // 在地图上显示位置
@@ -823,6 +869,13 @@ public class MainActivity extends BaseActivity implements SensorEventListener {
         if (!Settings.canDrawOverlays(getApplicationContext())) {//悬浮窗权限判断
             GoUtils.showEnableFloatWindowDialog(this);
             XLog.e("无悬浮窗权限!");
+            return;
+        }
+
+        /* 路线模拟和位置传送使用的是同一个服务，两者不能同时进行 */
+        if (ServiceGo.isRouteRunning()) {
+            Snackbar.make(v, "路线模拟正在运行，请先停止路线模拟", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
             return;
         }
 
@@ -933,7 +986,8 @@ public class MainActivity extends BaseActivity implements SensorEventListener {
                 XLog.e("HTTP: HTTP GET FAILED");
                 //插表参数
                 ContentValues contentValues = new ContentValues();
-                contentValues.put(DataBaseHistoryLocation.DB_COLUMN_LOCATION, mMarkName);
+                contentValues.put(DataBaseHistoryLocation.DB_COLUMN_LOCATION,
+                        mMarkName == null ? getResources().getString(R.string.history_location_default_name) : mMarkName);
                 contentValues.put(DataBaseHistoryLocation.DB_COLUMN_LONGITUDE_WGS84, String.valueOf(latLng[0]));
                 contentValues.put(DataBaseHistoryLocation.DB_COLUMN_LATITUDE_WGS84, String.valueOf(latLng[1]));
                 contentValues.put(DataBaseHistoryLocation.DB_COLUMN_TIMESTAMP, System.currentTimeMillis() / 1000);
@@ -964,7 +1018,8 @@ public class MainActivity extends BaseActivity implements SensorEventListener {
                             DataBaseHistoryLocation.saveHistoryLocation(mLocationHistoryDB, contentValues);
                         } else {
                             ContentValues contentValues = new ContentValues();
-                            contentValues.put(DataBaseHistoryLocation.DB_COLUMN_LOCATION, mMarkName == null ? getRetJson.getString("message"): mMarkName);
+                            contentValues.put(DataBaseHistoryLocation.DB_COLUMN_LOCATION,
+                                    mMarkName == null ? getResources().getString(R.string.history_location_default_name) : mMarkName);
                             contentValues.put(DataBaseHistoryLocation.DB_COLUMN_LONGITUDE_WGS84, String.valueOf(latLng[0]));
                             contentValues.put(DataBaseHistoryLocation.DB_COLUMN_LATITUDE_WGS84, String.valueOf(latLng[1]));
                             contentValues.put(DataBaseHistoryLocation.DB_COLUMN_TIMESTAMP, System.currentTimeMillis() / 1000);
@@ -975,8 +1030,8 @@ public class MainActivity extends BaseActivity implements SensorEventListener {
                     } catch (JSONException e) {
                         XLog.e("JSON: resolve json error");
                         ContentValues contentValues = new ContentValues();
-                        contentValues.put(DataBaseHistoryLocation.DB_COLUMN_LOCATION, mMarkName == null ? getResources().getString(R.string.history_location_default_name) : mMarkName);
-                        contentValues.put(DataBaseHistoryLocation.DB_COLUMN_LOCATION, mMarkName);
+                        contentValues.put(DataBaseHistoryLocation.DB_COLUMN_LOCATION,
+                                mMarkName == null ? getResources().getString(R.string.history_location_default_name) : mMarkName);
                         contentValues.put(DataBaseHistoryLocation.DB_COLUMN_LONGITUDE_WGS84, String.valueOf(latLng[0]));
                         contentValues.put(DataBaseHistoryLocation.DB_COLUMN_LATITUDE_WGS84, String.valueOf(latLng[1]));
                         contentValues.put(DataBaseHistoryLocation.DB_COLUMN_TIMESTAMP, System.currentTimeMillis() / 1000);
@@ -1164,7 +1219,7 @@ public class MainActivity extends BaseActivity implements SensorEventListener {
     }
 
     private void checkUpdateVersion(boolean result) {
-        String mapApiUrl = "https://api.github.com/repos/zcshou/gogogo/releases/latest";
+        String mapApiUrl = "https://api.github.com/repos/Mortonnn/YingSuoPro/releases/latest";
 
         okhttp3.Request request = new okhttp3.Request.Builder().url(mapApiUrl).get().build();
         final Call call = mOkHttpClient.newCall(request);
@@ -1176,6 +1231,10 @@ public class MainActivity extends BaseActivity implements SensorEventListener {
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull okhttp3.Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    XLog.i("更新检查失败: HTTP " + response.code());
+                    return;
+                }
                 ResponseBody responseBody = response.body();
                 if (responseBody != null) {
                     String resp = responseBody.string();

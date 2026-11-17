@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_background">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.baidu.mapapi.map.TextureMapView
+            android:id="@+id/route_map_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <!-- 中心准星：拖动地图，准星尖端指向的位置就是新增的途经点 -->
+        <ImageView
+            android:id="@+id/route_center_marker"
+            android:layout_width="28dp"
+            android:layout_height="36dp"
+            android:layout_centerInParent="true"
+            android:contentDescription="@string/route_btn_add_point"
+            android:translationY="-18dp"
+            app:srcCompat="@drawable/ic_route_mark"
+            app:tint="@color/colorPrimary" />
+
+        <SearchView
+            android:id="@+id/route_search_view"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="64dp"
+            android:iconifiedByDefault="true"
+            android:queryHint="@string/app_search_tips" />
+
+        <LinearLayout
+            android:layout_width="48dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/bg_map_controls"
+            android:elevation="2dp"
+            android:orientation="vertical"
+            android:padding="2dp">
+
+            <ImageButton
+                android:id="@+id/route_cur_position"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/cur_position"
+                app:srcCompat="@drawable/ic_home_position"
+                app:tint="@color/colorPrimary" />
+
+            <ImageButton
+                android:id="@+id/route_zoom_in"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/zoom_in"
+                app:srcCompat="@drawable/ic_zoom_in"
+                app:tint="@color/colorPrimary" />
+
+            <ImageButton
+                android:id="@+id/route_zoom_out"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/zoom_out"
+                app:srcCompat="@drawable/ic_zoom_out"
+                app:tint="@color/colorPrimary" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/route_search_linear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/route_search_view"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/bg_search_panel"
+            android:padding="6dp"
+            android:visibility="gone">
+
+            <ListView
+                android:id="@+id/route_search_list_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <!-- Material BottomSheetBehavior：拖动由系统接管，展开时不会误拖地图 -->
+    <LinearLayout
+        android:id="@+id/route_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/route_panel_bg"
+        android:clickable="true"
+        android:elevation="12dp"
+        android:focusable="true"
+        android:orientation="vertical"
+        app:behavior_draggable="true"
+        app:behavior_fitToContents="true"
+        app:behavior_hideable="false"
+        app:behavior_peekHeight="260dp"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <LinearLayout
+            android:id="@+id/route_panel_collapsed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/route_panel_handle"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:contentDescription="@string/route_history_title"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="36dp"
+                android:layout_height="4dp"
+                android:background="@drawable/bg_drag_handle" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/route_controls"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="14dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/route_point_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/on_surface_variant"
+                    android:textSize="13sp" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/route_length"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/on_surface_variant"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/route_undo"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/route_btn_undo"
+                    app:srcCompat="@drawable/ic_route_undo"
+                    app:tint="@color/colorPrimary" />
+
+                <ImageButton
+                    android:id="@+id/route_clear"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="4dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/route_btn_clear"
+                    app:srcCompat="@drawable/ic_route_clear"
+                    app:tint="@color/colorPrimary" />
+
+                <ImageButton
+                    android:id="@+id/route_save"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="4dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/route_btn_save"
+                    app:srcCompat="@drawable/ic_route_save"
+                    app:tint="@color/colorPrimary" />
+
+                <ImageButton
+                    android:id="@+id/route_history"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="4dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/route_btn_history"
+                    app:srcCompat="@drawable/ic_route_history"
+                    app:tint="@color/colorPrimary" />
+
+                <ImageButton
+                    android:id="@+id/route_add_point"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="4dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/route_btn_add_point"
+                    app:srcCompat="@drawable/ic_route_add"
+                    app:tint="@color/colorPrimary" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/route_speed_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/on_surface"
+                    android:textSize="13sp" />
+
+                <ImageButton
+                    android:id="@+id/route_set_speed"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="4dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/route_speed_title"
+                    app:srcCompat="@drawable/ic_route_settings"
+                    app:tint="@color/colorPrimary" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/route_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/on_surface"
+                    android:textSize="14sp" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <ImageButton
+                    android:id="@+id/route_pause"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_marginEnd="6dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/route_btn_pause"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/ic_route_pause"
+                    app:tint="@color/colorPrimary" />
+
+                <ImageButton
+                    android:id="@+id/route_start"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/bg_route_start"
+                    android:contentDescription="@string/route_title"
+                    app:srcCompat="@drawable/ic_route_play"
+                    app:tint="@color/white" />
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/route_progress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:max="100"
+                android:progress="0"
+                android:progressTint="@color/colorPrimary" />
+        </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/route_history_linear"
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:orientation="vertical"
+            android:paddingStart="20dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="8dp">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/outline_variant" />
+
+            <TextView
+                android:id="@+id/route_history_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/route_history_title"
+                android:textColor="@color/on_surface"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/route_history_no_textview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:text="@string/route_history_idle"
+                android:textAlignment="center"
+                android:textColor="@color/on_surface_variant"
+                android:textSize="14sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/route_history_list_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:clipToPadding="false"
+                android:paddingBottom="8dp"
+                android:visibility="gone" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

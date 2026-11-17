@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#ff008577</color>
-    <color name="colorPrimaryDark">#ff008577</color>
-    <color name="colorAccent">#ff00897B</color>
+    <!-- 影梭 Pro 品牌色：取自 traintime_pda 的 Spring breeze green 主题 -->
+    <color name="colorPrimary">#ff4ea34c</color>
+    <color name="colorPrimaryDark">#ff2e6b34</color>
+    <color name="colorAccent">#ff4ea34c</color>
+    <color name="route_line">#ff4ea34c</color>
+
+    <!-- Material 3 语义色 -->
+    <color name="app_background">#fff7faf5</color>
+    <color name="surface">#ffffffff</color>
+    <color name="surface_variant">#ffe1e9e1</color>
+    <color name="on_surface">#ff191d19</color>
+    <color name="on_surface_variant">#ff414941</color>
+    <color name="outline">#ff717a70</color>
+    <color name="outline_variant">#ffc1c9c1</color>
+    <color name="primary_container">#ffcdeccb</color>
+    <color name="on_primary_container">#ff0b2e0d</color>
+    <color name="secondary_container">#ffd5e8d0</color>
+    <color name="on_secondary_container">#ff111f12</color>
 
     <color name="white">#ffffff</color> <!-- 白色 -->
     <color name="ivory">#fffff0</color> <!-- 象牙色 -->

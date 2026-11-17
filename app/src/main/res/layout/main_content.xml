@@ -13,14 +13,16 @@
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/AppTheme.AppBarOverlay">
+            android:background="@color/surface"
+            app:elevation="0dp">
 
-            <androidx.appcompat.widget.Toolbar
+            <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@color/colorPrimary"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
+                android:background="@color/surface"
+                app:navigationIconTint="@color/on_surface"
+                app:titleTextColor="@color/on_surface" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -38,38 +40,42 @@
             android:layout_marginStart="30dp"
             android:layout_marginBottom="80dp"
             android:contentDescription="@null"
+            app:backgroundTint="@color/colorPrimary"
             app:elevation="6dp"
             app:pressedTranslationZ="12dp"
-            app:srcCompat="@drawable/ic_position" />
+            app:srcCompat="@drawable/ic_position"
+            app:tint="@color/white" />
 
         <LinearLayout
             android:id="@+id/search_linear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#ddffffff"
-            android:visibility="gone"
-            android:layout_marginTop="?attr/actionBarSize">
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="?attr/actionBarSize"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/bg_search_panel"
+            android:padding="6dp"
+            android:visibility="gone">
             <ListView
                 android:id="@+id/search_list_view"
                 android:layout_width="match_parent"
-                android:layout_margin="10dp"
-                android:layout_height="wrap_content">
-            </ListView>
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/search_history_linear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#ddffffff"
-            android:visibility="gone"
-            android:layout_marginTop="?attr/actionBarSize">
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="?attr/actionBarSize"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/bg_search_panel"
+            android:padding="6dp"
+            android:visibility="gone">
             <ListView
                 android:id="@+id/search_history_list_view"
                 android:layout_width="match_parent"
-                android:layout_margin="10dp"
-                android:layout_height="wrap_content">
-            </ListView>
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
     </FrameLayout>
