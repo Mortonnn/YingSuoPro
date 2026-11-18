@@ -1,126 +1,173 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    路线模拟 · 速度与频率
+    M3 Expressive 紧凑表单：说明文字 + 2 列 FilledBox + 整行海拔。
+    Java 依赖的 id 全部保留（dialog_route_speed / dialog_route_speed_float /
+    dialog_route_interval / dialog_route_loop / dialog_route_altitude）。
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="300dp"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingStart="20dp"
+    android:paddingStart="24dp"
     android:paddingTop="4dp"
-    android:paddingEnd="20dp"
+    android:paddingEnd="24dp"
     android:paddingBottom="4dp">
 
-    <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+    <TextView
+        android:id="@+id/route_speed_dialog_subtitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/route_setting_speed"
-        app:boxCornerRadiusBottomEnd="12dp"
-        app:boxCornerRadiusBottomStart="12dp"
-        app:boxCornerRadiusTopEnd="12dp"
-        app:boxCornerRadiusTopStart="12dp">
+        android:text="@string/route_speed_dialog_subtitle"
+        android:textAppearance="@style/TextAppearance.App.Label"
+        android:textColor="@color/on_surface_variant" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/dialog_route_speed"
-            android:layout_width="match_parent"
+    <!-- 第一行：速度 / 浮动 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.App.TextInputLayout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:digits="0123456789."
-            android:inputType="numberDecimal"
-            android:maxLength="6"
-            android:singleLine="true"
-            android:textColor="@color/on_surface"
-            android:textSize="15sp" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_weight="1"
+            android:hint="@string/route_speed_field_speed"
+            app:suffixText="@string/route_speed_unit_mps"
+            app:suffixTextAppearance="@style/TextAppearance.App.Caption"
+            app:suffixTextColor="@color/on_surface_variant">
 
-    <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:hint="@string/route_setting_speed_float"
-        app:boxCornerRadiusBottomEnd="12dp"
-        app:boxCornerRadiusBottomStart="12dp"
-        app:boxCornerRadiusTopEnd="12dp"
-        app:boxCornerRadiusTopStart="12dp">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/dialog_route_speed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:digits="0123456789."
+                android:fontFamily="monospace"
+                android:fontFeatureSettings="tnum"
+                android:inputType="numberDecimal"
+                android:maxLength="6"
+                android:singleLine="true"
+                android:textColor="@color/on_surface"
+                android:textSize="@dimen/text_body" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/dialog_route_speed_float"
-            android:layout_width="match_parent"
+        <Space
+            android:layout_width="12dp"
+            android:layout_height="1dp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.App.TextInputLayout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:digits="0123456789"
-            android:inputType="number"
-            android:maxLength="3"
-            android:singleLine="true"
-            android:textColor="@color/on_surface"
-            android:textSize="15sp" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_weight="1"
+            android:hint="@string/route_speed_field_float"
+            app:suffixText="@string/route_speed_unit_percent"
+            app:suffixTextAppearance="@style/TextAppearance.App.Caption"
+            app:suffixTextColor="@color/on_surface_variant">
 
-    <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/dialog_route_speed_float"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:digits="0123456789"
+                android:fontFamily="monospace"
+                android:fontFeatureSettings="tnum"
+                android:inputType="number"
+                android:maxLength="3"
+                android:singleLine="true"
+                android:textColor="@color/on_surface"
+                android:textSize="@dimen/text_body" />
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+
+    <!-- 第二行：刷新间隔 / 循环次数 -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:hint="@string/route_setting_interval"
-        app:boxCornerRadiusBottomEnd="12dp"
-        app:boxCornerRadiusBottomStart="12dp"
-        app:boxCornerRadiusTopEnd="12dp"
-        app:boxCornerRadiusTopStart="12dp">
+        android:layout_marginTop="12dp"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/dialog_route_interval"
-            android:layout_width="match_parent"
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.App.TextInputLayout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:digits="0123456789"
-            android:inputType="number"
-            android:maxLength="4"
-            android:singleLine="true"
-            android:textColor="@color/on_surface"
-            android:textSize="15sp" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_weight="1"
+            android:hint="@string/route_speed_field_interval"
+            app:suffixText="@string/route_speed_unit_ms"
+            app:suffixTextAppearance="@style/TextAppearance.App.Caption"
+            app:suffixTextColor="@color/on_surface_variant">
 
-    <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:hint="@string/route_setting_loop"
-        app:boxCornerRadiusBottomEnd="12dp"
-        app:boxCornerRadiusBottomStart="12dp"
-        app:boxCornerRadiusTopEnd="12dp"
-        app:boxCornerRadiusTopStart="12dp">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/dialog_route_interval"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:digits="0123456789"
+                android:fontFamily="monospace"
+                android:fontFeatureSettings="tnum"
+                android:inputType="number"
+                android:maxLength="4"
+                android:singleLine="true"
+                android:textColor="@color/on_surface"
+                android:textSize="@dimen/text_body" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/dialog_route_loop"
-            android:layout_width="match_parent"
+        <Space
+            android:layout_width="12dp"
+            android:layout_height="1dp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.App.TextInputLayout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:digits="0123456789"
-            android:inputType="number"
-            android:maxLength="4"
-            android:singleLine="true"
-            android:textColor="@color/on_surface"
-            android:textSize="15sp" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_weight="1"
+            android:hint="@string/route_speed_field_loop"
+            app:suffixText="@string/route_speed_unit_times"
+            app:suffixTextAppearance="@style/TextAppearance.App.Caption"
+            app:suffixTextColor="@color/on_surface_variant">
 
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/dialog_route_loop"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:digits="0123456789"
+                android:fontFamily="monospace"
+                android:fontFeatureSettings="tnum"
+                android:inputType="number"
+                android:maxLength="4"
+                android:singleLine="true"
+                android:textColor="@color/on_surface"
+                android:textSize="@dimen/text_body" />
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+
+    <!-- 整行：海拔 -->
     <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        style="@style/Widget.App.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:hint="@string/route_setting_altitude"
-        app:boxCornerRadiusBottomEnd="12dp"
-        app:boxCornerRadiusBottomStart="12dp"
-        app:boxCornerRadiusTopEnd="12dp"
-        app:boxCornerRadiusTopStart="12dp">
+        android:layout_marginTop="12dp"
+        android:hint="@string/route_speed_field_altitude"
+        app:suffixText="@string/route_speed_unit_m"
+        app:suffixTextAppearance="@style/TextAppearance.App.Caption"
+        app:suffixTextColor="@color/on_surface_variant">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/dialog_route_altitude"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:digits="0123456789.-"
+            android:digits="-0123456789."
+            android:fontFamily="monospace"
+            android:fontFeatureSettings="tnum"
             android:inputType="numberDecimal"
             android:maxLength="7"
             android:singleLine="true"
             android:textColor="@color/on_surface"
-            android:textSize="15sp" />
+            android:textSize="@dimen/text_body" />
     </com.google.android.material.textfield.TextInputLayout>
 
 </LinearLayout>

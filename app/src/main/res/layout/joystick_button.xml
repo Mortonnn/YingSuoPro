@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+    按键式摇杆：3×3 网格，方向键 44dp 触控，中心 56dp 圆形 primary。
+    方向图标全部使用 Material Symbols Rounded（ic_north / ic_south_west 等）。
+    Java 依赖 id：btn_north / btn_south / btn_west / btn_east / btn_north_east /
+    btn_south_east / btn_north_west / btn_south_west / btn_center。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
 
-
+    <!-- 第一行 -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/btn_north_west"
@@ -18,8 +24,9 @@
             android:layout_height="@dimen/joystick_btn_height"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:contentDescription="@null"
-            android:src="@drawable/ic_left_up"
-            android:theme="@style/RippleWhite" />
+            android:src="@drawable/ic_north_west"
+            android:tint="@color/on_surface_variant"
+            tools:ignore="TouchTargetSizeCheck" />
 
         <ImageButton
             android:id="@+id/btn_north"
@@ -27,8 +34,8 @@
             android:layout_height="@dimen/joystick_btn_height"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:contentDescription="@null"
-            android:src="@drawable/ic_up"
-            android:theme="@style/RippleWhite"
+            android:src="@drawable/ic_north"
+            android:tint="@color/on_surface_variant"
             tools:ignore="TouchTargetSizeCheck" />
 
         <ImageButton
@@ -37,15 +44,17 @@
             android:layout_height="@dimen/joystick_btn_height"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:contentDescription="@null"
-            android:src="@drawable/ic_right_up"
-            android:theme="@style/RippleWhite" />
-
+            android:src="@drawable/ic_north_east"
+            android:tint="@color/on_surface_variant"
+            tools:ignore="TouchTargetSizeCheck" />
     </LinearLayout>
 
+    <!-- 第二行：中心按钮更大，形成视觉焦点 -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/btn_west"
@@ -53,17 +62,19 @@
             android:layout_height="@dimen/joystick_btn_height"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:contentDescription="@null"
-            android:src="@drawable/ic_left"
-            android:theme="@style/RippleWhite" />
+            android:src="@drawable/ic_west"
+            android:tint="@color/on_surface_variant"
+            tools:ignore="TouchTargetSizeCheck" />
 
         <ImageButton
             android:id="@+id/btn_center"
-            android:layout_width="@dimen/joystick_btn_width"
-            android:layout_height="@dimen/joystick_btn_height"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@null"
-            android:src="@drawable/ic_lock_close"
-            android:theme="@style/RippleWhite" />
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:background="@drawable/bg_route_start"
+            android:contentDescription="@string/joystick_move"
+            android:foreground="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_play"
+            android:tint="@color/on_primary" />
 
         <ImageButton
             android:id="@+id/btn_east"
@@ -71,16 +82,16 @@
             android:layout_height="@dimen/joystick_btn_height"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:contentDescription="@null"
-            android:src="@drawable/ic_right"
-            android:theme="@style/RippleWhite" />
-
+            android:src="@drawable/ic_east"
+            android:tint="@color/on_surface_variant"
+            tools:ignore="TouchTargetSizeCheck" />
     </LinearLayout>
 
-
+    <!-- 第三行 -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/btn_south_west"
@@ -88,8 +99,9 @@
             android:layout_height="@dimen/joystick_btn_height"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:contentDescription="@null"
-            android:src="@drawable/ic_left_down"
-            android:theme="@style/RippleWhite" />
+            android:src="@drawable/ic_south_west"
+            android:tint="@color/on_surface_variant"
+            tools:ignore="TouchTargetSizeCheck" />
 
         <ImageButton
             android:id="@+id/btn_south"
@@ -97,8 +109,9 @@
             android:layout_height="@dimen/joystick_btn_height"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:contentDescription="@null"
-            android:src="@drawable/ic_down"
-            android:theme="@style/RippleWhite" />
+            android:src="@drawable/ic_south"
+            android:tint="@color/on_surface_variant"
+            tools:ignore="TouchTargetSizeCheck" />
 
         <ImageButton
             android:id="@+id/btn_south_east"
@@ -106,10 +119,9 @@
             android:layout_height="@dimen/joystick_btn_height"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:contentDescription="@null"
-            android:src="@drawable/ic_right_down"
-            android:theme="@style/RippleWhite" />
-
+            android:src="@drawable/ic_south_east"
+            android:tint="@color/on_surface_variant"
+            tools:ignore="TouchTargetSizeCheck" />
     </LinearLayout>
 
 </LinearLayout>
-

@@ -2,7 +2,6 @@ package com.zcshou.gogogo;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -17,14 +16,16 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.zcshou.utils.GoUtils;
 
 import java.util.ArrayList;
@@ -51,8 +52,15 @@ public class WelcomeActivity extends AppCompatActivity {
         // 生成默认参数的值（一定要尽可能早的调用，因为后续有些界面可能需要使用参数）
         PreferenceManager.setDefaultValues(this, R.xml.preferences_main, false);
 
-        Button startBtn = findViewById(R.id.startButton);
+        MaterialButton startBtn = findViewById(R.id.startButton);
         startBtn.setOnClickListener(v -> startMainActivity());
+
+        TextView versionView = findViewById(R.id.welcome_version);
+        if (versionView != null) {
+            String versionName = GoUtils.getVersionName(this);
+            versionView.setText(getString(R.string.pages_welcome_version_format,
+                    versionName == null ? "" : versionName));
+        }
 
         checkAgreementAndPrivacy();
     }
@@ -129,7 +137,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
         if (!GoUtils.isNetworkAvailable(this)) {
             GoUtils.DisplayToast(this, getResources().getString(R.string.app_error_network));
-            return;
+            /* 地图可在网络恢复后加载，网络状态不应阻断进入应用 */
         }
 
         if (!GoUtils.isGpsOpened(this)) {
@@ -163,7 +171,7 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     private void showAgreementDialog() {
-        final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        final AlertDialog alertDialog = new MaterialAlertDialogBuilder(this).create();
         alertDialog.show();
         alertDialog.setCancelable(false);
         Window window = alertDialog.getWindow();
@@ -173,8 +181,8 @@ public class WelcomeActivity extends AppCompatActivity {
             window.setWindowAnimations(R.style.DialogAnimFadeInFadeOut);
 
             TextView tvContent = window.findViewById(R.id.tv_content);
-            Button tvCancel = window.findViewById(R.id.tv_cancel);
-            Button tvAgree = window.findViewById(R.id.tv_agree);
+            MaterialButton tvCancel = window.findViewById(R.id.tv_cancel);
+            MaterialButton tvAgree = window.findViewById(R.id.tv_agree);
             SpannableStringBuilder ssb = new SpannableStringBuilder();
             ssb.append(getResources().getString(R.string.app_agreement_content));
             tvContent.setMovementMethod(LinkMovementMethod.getInstance());
@@ -199,7 +207,7 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     private void showPrivacyDialog() {
-        final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        final AlertDialog alertDialog = new MaterialAlertDialogBuilder(this).create();
         alertDialog.show();
         alertDialog.setCancelable(false);
         Window window = alertDialog.getWindow();
@@ -209,8 +217,8 @@ public class WelcomeActivity extends AppCompatActivity {
             window.setWindowAnimations(R.style.DialogAnimFadeInFadeOut);
 
             TextView tvContent = window.findViewById(R.id.tv_content);
-            Button tvCancel = window.findViewById(R.id.tv_cancel);
-            Button tvAgree = window.findViewById(R.id.tv_agree);
+            MaterialButton tvCancel = window.findViewById(R.id.tv_cancel);
+            MaterialButton tvAgree = window.findViewById(R.id.tv_agree);
             SpannableStringBuilder ssb = new SpannableStringBuilder();
             ssb.append(getResources().getString(R.string.app_privacy_content));
             tvContent.setMovementMethod(LinkMovementMethod.getInstance());
@@ -276,9 +284,6 @@ public class WelcomeActivity extends AppCompatActivity {
         if (mPrivacy && mAgreement) {
             checkBox.setChecked(true);
             checkDefaultPermissions();
-            if (isPermission) {
-                startMainActivity();
-            }
         } else {
             checkBox.setChecked(false);
         }

@@ -2,11 +2,16 @@ package com.zcshou.gogogo;
 
 import android.os.Bundle;
 import android.text.InputType;
+import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
+import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceScreen;
 import androidx.preference.SwitchPreferenceCompat;
 
 import com.baidu.mapapi.SDKInitializer;
@@ -33,6 +38,15 @@ public class FragmentSettings extends PreferenceFragmentCompat {
                 return true;
             });
         }
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        /* 卡片本身就带描边，去掉系统在行间画的分隔线 */
+        setDivider(null);
+        setDividerHeight(0);
     }
 
     @Override
@@ -101,6 +115,37 @@ public class FragmentSettings extends PreferenceFragmentCompat {
         Preference pfVersion = findPreference("setting_version");
         if (pfVersion != null) {
             pfVersion.setSummary(verName);
+        }
+
+        // 非开关条目统一使用右侧 chevron，开关条目保留 Switch
+        applyTrailingWidgets();
+    }
+
+    /**
+     * 为所有非 Switch 的 Preference 行追加右侧 chevron，
+     * 让设置列表的层级与可点击性更清晰（Material 3 Expressive）。
+     */
+    private void applyTrailingWidgets() {
+        PreferenceScreen screen = getPreferenceScreen();
+        if (screen == null) {
+            return;
+        }
+        for (int i = 0; i < screen.getPreferenceCount(); i++) {
+            Preference preference = screen.getPreference(i);
+            if (preference instanceof PreferenceCategory) {
+                PreferenceCategory category = (PreferenceCategory) preference;
+                for (int j = 0; j < category.getPreferenceCount(); j++) {
+                    bindTrailingWidget(category.getPreference(j));
+                }
+            } else {
+                bindTrailingWidget(preference);
+            }
+        }
+    }
+
+    private void bindTrailingWidget(Preference preference) {
+        if (preference != null && !(preference instanceof SwitchPreferenceCompat)) {
+            preference.setWidgetLayoutResource(R.layout.preference_widget_chevron);
         }
     }
 }

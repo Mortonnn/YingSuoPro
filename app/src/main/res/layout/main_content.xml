@@ -6,77 +6,102 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <FrameLayout
+    <!-- 地图铺满全屏，顶栏与控件浮在地图之上 -->
+    <include
+        layout="@layout/main_map"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent" />
 
-        <com.google.android.material.appbar.AppBarLayout
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/app_bar_card"
+        style="@style/Widget.App.Card.Floating"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_marginStart="@dimen/top_bar_margin"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="@dimen/top_bar_margin"
+        app:cardCornerRadius="@dimen/radius_xl"
+        app:cardElevation="2dp"
+        app:strokeWidth="0dp">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            style="@style/Widget.App.Toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/top_bar_height"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            android:theme="@style/ThemeOverlay.App.Toolbar"
+            app:subtitle="@string/app_toolbar_subtitle"
+            app:title="@string/app_name"
+            app:titleTextAppearance="@style/TextAppearance.App.Toolbar.Title" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- 搜索建议 / 搜索历史浮层，保留 LinearLayout 供 MainActivity 直接操作 -->
+    <LinearLayout
+        android:id="@+id/search_linear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="92dp"
+        android:layout_marginEnd="12dp"
+        android:background="@drawable/bg_search_panel"
+        android:elevation="3dp"
+        android:orientation="vertical"
+        android:padding="6dp"
+        android:visibility="gone">
+
+        <ListView
+            android:id="@+id/search_list_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/surface"
-            app:elevation="0dp">
+            android:divider="@android:color/transparent"
+            android:dividerHeight="0dp" />
+    </LinearLayout>
 
-            <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="@color/surface"
-                app:navigationIconTint="@color/on_surface"
-                app:titleTextColor="@color/on_surface" />
+    <LinearLayout
+        android:id="@+id/search_history_linear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="92dp"
+        android:layout_marginEnd="12dp"
+        android:background="@drawable/bg_search_panel"
+        android:elevation="3dp"
+        android:orientation="vertical"
+        android:padding="6dp"
+        android:visibility="gone">
 
-        </com.google.android.material.appbar.AppBarLayout>
-
-        <include
-            layout="@layout/main_map"
+        <ListView
+            android:id="@+id/search_history_list_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="?attr/actionBarSize" />
+            android:divider="@android:color/transparent"
+            android:dividerHeight="0dp" />
+    </LinearLayout>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/faBtnStart"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|start"
-            android:layout_marginStart="30dp"
-            android:layout_marginBottom="80dp"
-            android:contentDescription="@null"
-            app:backgroundTint="@color/colorPrimary"
-            app:elevation="6dp"
-            app:pressedTranslationZ="12dp"
-            app:srcCompat="@drawable/ic_position"
-            app:tint="@color/white" />
+    <!-- 主操作：开始 / 停止模拟 -->
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/faBtnStart"
+        android:layout_width="wrap_content"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom|start"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="80dp"
+        android:contentDescription="@string/fab_start_mock"
+        android:text="@string/fab_start_mock"
+        android:textColor="@color/on_primary"
+        android:textSize="@dimen/text_button"
+        android:fontFamily="sans-serif-medium"
+        app:backgroundTint="@color/primary"
+        app:cornerRadius="@dimen/radius_m"
+        app:elevation="2dp"
+        app:icon="@drawable/ic_navigation"
+        app:iconTint="@color/on_primary"
+        app:iconPadding="10dp"
+        app:rippleColor="@color/primary_container" />
 
-        <LinearLayout
-            android:id="@+id/search_linear"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="?attr/actionBarSize"
-            android:layout_marginEnd="12dp"
-            android:background="@drawable/bg_search_panel"
-            android:padding="6dp"
-            android:visibility="gone">
-            <ListView
-                android:id="@+id/search_list_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/search_history_linear"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="?attr/actionBarSize"
-            android:layout_marginEnd="12dp"
-            android:background="@drawable/bg_search_panel"
-            android:padding="6dp"
-            android:visibility="gone">
-            <ListView
-                android:id="@+id/search_history_list_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-    </FrameLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

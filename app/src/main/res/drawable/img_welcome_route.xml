@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    欢迎页 hero 插画：抽象路线 + 两枚 Material Symbols Rounded「location_on」图钉。
+    仅使用语义色绘制，不使用文字或 emoji。
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="324dp"
+    android:height="180dp"
+    android:viewportWidth="360"
+    android:viewportHeight="200">
+
+    <!-- 路线柔光底轨 -->
+    <path
+        android:fillColor="@color/transparent"
+        android:pathData="M46,172 C90,158 84,128 120,118 S176,148 216,130 S280,74 330,60"
+        android:strokeAlpha="0.22"
+        android:strokeColor="@color/on_primary_container"
+        android:strokeLineCap="round"
+        android:strokeWidth="12" />
+
+    <!-- 主路线 -->
+    <path
+        android:fillColor="@color/transparent"
+        android:pathData="M46,172 C90,158 84,128 120,118 S176,148 216,130 S280,74 330,60"
+        android:strokeColor="@color/on_primary_container"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeWidth="4" />
+
+    <!-- 途经点 -->
+    <path
+        android:fillColor="@color/primary"
+        android:pathData="M120,118 m-6,0 a6,6 0 1,0 12,0 a6,6 0 1,0 -12,0" />
+    <path
+        android:fillColor="@color/primary"
+        android:pathData="M216,130 m-5,0 a5,5 0 1,0 10,0 a5,5 0 1,0 -10,0" />
+
+    <!-- 起点图钉（Material Symbols location_on） -->
+    <group
+        android:scaleX="0.055"
+        android:scaleY="0.055"
+        android:translateX="25.6"
+        android:translateY="125.8">
+        <group android:translateY="960">
+            <path
+                android:fillColor="@color/primary"
+                android:pathData="M480-186q122-112 181-203.5T720-552q0-109-69.5-178.5T480-800q-101 0-170.5 69.5T240-552q0 71 59 162.5T480-186Zm-28 74q-14-5-25-15-65-60-115-117t-83.5-110.5q-33.5-53.5-51-103T160-552q0-150 96.5-239T480-880q127 0 223.5 89T800-552q0 45-17.5 94.5t-51 103Q698-301 648-244T533-127q-11 10-25 15t-28 5q-14 0-28-5Zm28-448Zm56.5 56.5Q560-527 560-560t-23.5-56.5Q513-640 480-640t-56.5 23.5Q400-593 400-560t23.5 56.5Q447-480 480-480t56.5-23.5Z" />
+        </group>
+    </group>
+
+    <!-- 终点图钉（Material Symbols location_on） -->
+    <group
+        android:scaleX="0.06"
+        android:scaleY="0.06"
+        android:translateX="301.2"
+        android:translateY="9.6">
+        <group android:translateY="960">
+            <path
+                android:fillColor="@color/tertiary"
+                android:pathData="M480-186q122-112 181-203.5T720-552q0-109-69.5-178.5T480-800q-101 0-170.5 69.5T240-552q0 71 59 162.5T480-186Zm-28 74q-14-5-25-15-65-60-115-117t-83.5-110.5q-33.5-53.5-51-103T160-552q0-150 96.5-239T480-880q127 0 223.5 89T800-552q0 45-17.5 94.5t-51 103Q698-301 648-244T533-127q-11 10-25 15t-28 5q-14 0-28-5Zm28-448Zm56.5 56.5Q560-527 560-560t-23.5-56.5Q513-640 480-640t-56.5 23.5Q400-593 400-560t23.5 56.5Q447-480 480-480t56.5-23.5Z" />
+        </group>
+    </group>
+</vector>

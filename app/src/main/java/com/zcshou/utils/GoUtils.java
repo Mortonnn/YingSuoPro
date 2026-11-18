@@ -21,6 +21,7 @@ import android.view.Gravity;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -180,7 +181,7 @@ public class GoUtils {
 
     //提醒开启位置模拟的弹框
     public static  void showEnableMockLocationDialog(Context context) {
-        new AlertDialog.Builder(context)
+        new MaterialAlertDialogBuilder(context)
                 .setTitle("启用位置模拟")//这里是表头的内容
                 .setMessage("请在\"开发者选项→选择模拟位置信息应用\"中进行设置")//这里是中间显示的具体信息
                 .setPositiveButton("设置",(dialog, which) -> {
@@ -199,7 +200,7 @@ public class GoUtils {
 
     //提醒开启悬浮窗的弹框
     public static  void showEnableFloatWindowDialog(Context context) {
-        new AlertDialog.Builder(context)
+        new MaterialAlertDialogBuilder(context)
                 .setTitle("启用悬浮窗")//这里是表头的内容
                 .setMessage("为了模拟定位的稳定性，建议开启\"显示悬浮窗\"选项")//这里是中间显示的具体信息
                 .setPositiveButton("设置",(dialog, which) -> {
@@ -219,9 +220,9 @@ public class GoUtils {
 
     //显示开启GPS的提示
     public static  void showEnableGpsDialog(Context context) {
-        new AlertDialog.Builder(context)
-                .setTitle("启用定位服务")//这里是表头的内容
-                .setMessage("是否开启 GPS 定位服务?")//这里是中间显示的具体信息
+        new MaterialAlertDialogBuilder(context)
+                .setTitle("启用定位服务")
+                .setMessage("是否开启 GPS 定位服务？")
                 .setPositiveButton("确定",(dialog, which) -> {
                     try {
                         Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
@@ -238,8 +239,8 @@ public class GoUtils {
 
     // 提醒开启位置模拟的弹框
     public static  void showDisableWifiDialog(Context context) {
-        new AlertDialog.Builder(context)
-                .setTitle("警告")
+        new MaterialAlertDialogBuilder(context)
+                .setTitle("关闭 WIFI 提示")
                 .setMessage("开启 WIFI 后（即使没有连接热点）将导致定位闪回真实位置。建议关闭 WIFI，使用移动流量进行游戏！")
                 .setPositiveButton("去关闭",(dialog, which) -> {
                     try {

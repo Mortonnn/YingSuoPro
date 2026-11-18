@@ -10,19 +10,21 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-medium"
         android:text="@string/route_title"
         android:textColor="@color/on_surface"
-        android:textSize="22sp"
-        android:textStyle="bold" />
+        android:textSize="@dimen/text_title"
+        android:textStyle="normal" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="10dp"
         android:ellipsize="end"
+        android:fontFamily="sans-serif"
         android:maxLines="1"
         android:text="@string/route_map_tip_short"
-        android:textColor="@color/on_surface_variant"
-        android:textSize="12sp" />
+        android:textColor="@color/muted"
+        android:textSize="@dimen/text_caption" />
 
 </LinearLayout>

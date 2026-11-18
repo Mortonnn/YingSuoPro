@@ -1,91 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    地图 POI 信息窗：24dp 圆角卡片。
+    顶部地址 + 坐标；底部 3 个 40dp tonal 图标按钮 + 1 个 primary 传送按钮。
+    所有 id 均被 MainActivity 通过 findViewById 使用，必须保留。
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+    android:layout_width="300dp"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_history_item"
+    android:background="@drawable/bg_search_panel"
+    android:elevation="2dp"
     android:orientation="vertical"
-    android:padding="14dp">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:id="@+id/poi_fly"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginEnd="10dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@null"
-            android:src="@drawable/ic_fly"
-            app:tint="@color/colorPrimary" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/poi_longitude"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/on_surface"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/poi_latitude"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/on_surface_variant"
-                android:textSize="13sp" />
-        </LinearLayout>
-    </LinearLayout>
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/poi_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:textColor="@color/on_surface_variant"
-        android:textSize="13sp" />
+        android:ellipsize="end"
+        android:fontFamily="sans-serif-medium"
+        android:maxLines="2"
+        android:textColor="@color/on_surface"
+        android:textSize="@dimen/text_body" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:gravity="end"
+        android:layout_marginTop="4dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/poi_longitude"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:fontFeatureSettings="tnum"
+            android:textColor="@color/on_surface_variant"
+            android:textSize="@dimen/text_caption" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="6dp"
+            android:text="·"
+            android:textColor="@color/outline"
+            android:textSize="@dimen/text_caption" />
+
+        <TextView
+            android:id="@+id/poi_latitude"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:fontFeatureSettings="tnum"
+            android:textColor="@color/on_surface_variant"
+            android:textSize="@dimen/text_caption" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="12dp"
+        android:background="@color/outline_variant" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/poi_save"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@null"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_icon_circle"
+            android:contentDescription="@string/overlay_poi_save"
             android:src="@drawable/ic_save"
-            app:tint="@color/colorPrimary" />
+            android:tint="@color/on_secondary_container" />
 
         <ImageButton
             android:id="@+id/poi_copy"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginStart="8dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@null"
+            android:background="@drawable/bg_icon_circle"
+            android:contentDescription="@string/overlay_poi_copy"
             android:src="@drawable/ic_copy"
-            app:tint="@color/colorPrimary" />
+            android:tint="@color/on_secondary_container" />
 
         <ImageButton
             android:id="@+id/poi_share"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginStart="8dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@null"
+            android:background="@drawable/bg_icon_circle"
+            android:contentDescription="@string/overlay_poi_share"
             android:src="@drawable/ic_share"
-            app:tint="@color/colorPrimary" />
+            android:tint="@color/on_secondary_container" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/poi_fly"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_route_start"
+            android:contentDescription="@string/overlay_poi_fly"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_fly"
+            android:tint="@color/on_primary" />
     </LinearLayout>
+
 </LinearLayout>

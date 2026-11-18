@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 悬浮窗 / 对话框辅助文案（本任务新增，避免改动公共 strings_ui.xml） -->
+    <string name="overlay_joystick_panel">摇杆面板</string>
+    <string name="overlay_joystick_rocker">虚拟摇杆，拖动控制方向</string>
+    <string name="overlay_direction_pad">方向按键</string>
+    <string name="overlay_poi_save">保存位置</string>
+    <string name="overlay_poi_copy">复制坐标</string>
+    <string name="overlay_poi_share">分享位置</string>
+    <string name="overlay_poi_fly">传送到此位置</string>
+    <string name="overlay_search_results">搜索结果</string>
+    <string name="overlay_map_search_hint">搜索地点或坐标</string>
+</resources>

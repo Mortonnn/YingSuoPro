@@ -1,6 +1,11 @@
-<vector android:height="24dp" android:viewportHeight="1024"
-    android:viewportWidth="1024" android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
-    <path android:fillColor="#FF000000" android:pathData="M170.67,448a298.67,298.67 0,0 1,597.33 0,21.33 21.33,0 0,0 42.67,0 341.33,341.33 0,0 0,-682.67 0c0,231.68 315.73,456.11 328.96,465.49a21.33,21.33 0,0 0,29.87 -5.12,21.33 21.33,0 0,0 -5.12,-29.87C480,876.37 170.67,657.49 170.67,448z"/>
-    <path android:fillColor="#FF000000" android:pathData="M341.33,398.93a21.33,21.33 0,0 0,-25.17 16.64,163.41 163.41,0 0,0 -3.41,32A160,160 0,1 0,416 298.67a21.33,21.33 0,0 0,14.51 40.11,116.05 116.05,0 0,1 38.83,-8.11 116.91,116.91 0,1 1,-113.49 93.44,21.33 21.33,0 0,0 -14.51,-25.17zM872.96,718.08h-34.56a131.84,131.84 0,0 0,-108.8 -108.8v-26.45a21.33,21.33 0,1 0,-42.67 0v26.45a131.84,131.84 0,0 0,-108.8 108.8h-26.45a21.33,21.33 0,0 0,0 42.67h26.45a131.84,131.84 0,0 0,108.8 108.8L686.93,896a21.33,21.33 0,0 0,42.67 0v-26.45a131.84,131.84 0,0 0,108.8 -108.8h34.56a21.33,21.33 0,0 0,0 -42.67zM708.27,829.01a89.6,89.6 0,1 1,89.6 -89.6,89.6 89.6,0 0,1 -89.6,89.6z"/>
-    <path android:fillColor="#FF000000" android:pathData="M708.27,739.41m-42.67,0a42.67,42.67 0,1 0,85.33 0,42.67 42.67,0 1,0 -85.33,0Z"/>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Material Symbols Rounded "map" (Apache License 2.0), fetched from fonts.gstatic.com -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="960"
+    android:viewportHeight="960">
+    <group android:translateY="960">
+        <path android:fillColor="#FF000000" android:pathData="m574-129-214-75-186 72q-10 4-19.5 2.5T137-136q-8-5-12.5-13.5T120-169v-561q0-13 7.5-23t20.5-15l186-63q6-2 12.5-3t13.5-1q7 0 13.5 1t12.5 3l214 75 186-72q10-4 19.5-2.5T823-824q8 5 12.5 13.5T840-791v561q0 13-7.5 23T812-192l-186 63q-6 2-12.5 3t-13.5 1q-7 0-13.5-1t-12.5-3Zm-14-89v-468l-160-56v468l160 56Zm80 0 120-40v-474l-120 46v468Zm-440-10 120-46v-468l-120 40v474Zm440-458v468-468Zm-320-56v468-468Z"/>
+    </group>
 </vector>

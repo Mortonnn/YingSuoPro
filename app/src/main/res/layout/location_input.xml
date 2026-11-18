@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    输入坐标对话框：两个 FilledBox 字段 + 胶囊分段坐标系。
+    保留 pos_type_bd 的 RadioButton 类型与 id（MainActivity 依赖 isChecked()），
+    因此不使用 MaterialButtonToggleGroup，只做 M3 分段外观。
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingStart="24dp"
-    android:paddingTop="20dp"
+    android:paddingTop="8dp"
     android:paddingEnd="24dp"
-    android:paddingBottom="20dp">
+    android:paddingBottom="4dp">
 
     <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        style="@style/Widget.App.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/label_longitude"
-        app:boxCornerRadiusBottomEnd="12dp"
-        app:boxCornerRadiusBottomStart="12dp"
-        app:boxCornerRadiusTopEnd="12dp"
-        app:boxCornerRadiusTopStart="12dp">
+        android:hint="@string/label_longitude">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/joystick_longitude"
@@ -25,22 +25,20 @@
             android:layout_height="wrap_content"
             android:autofillHints="longitude"
             android:digits="-0123456789."
+            android:fontFamily="monospace"
+            android:fontFeatureSettings="tnum"
             android:inputType="numberDecimal"
             android:singleLine="true"
             android:textColor="@color/on_surface"
-            android:textSize="15sp" />
+            android:textSize="@dimen/text_body" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        style="@style/Widget.App.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:hint="@string/label_latitude"
-        app:boxCornerRadiusBottomEnd="12dp"
-        app:boxCornerRadiusBottomStart="12dp"
-        app:boxCornerRadiusTopEnd="12dp"
-        app:boxCornerRadiusTopStart="12dp">
+        android:layout_marginTop="12dp"
+        android:hint="@string/label_latitude">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/joystick_latitude"
@@ -48,61 +46,76 @@
             android:layout_height="wrap_content"
             android:autofillHints="latitude"
             android:digits="-0123456789."
+            android:fontFamily="monospace"
+            android:fontFeatureSettings="tnum"
             android:inputType="numberDecimal"
             android:singleLine="true"
             android:textColor="@color/on_surface"
-            android:textSize="15sp" />
+            android:textSize="@dimen/text_body" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!-- 坐标系：胶囊分段，保留 RadioGroup/RadioButton 结构 -->
     <RadioGroup
         android:id="@+id/RadioGroupMapType"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:orientation="horizontal">
+        android:layout_height="56dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_segmented"
+        android:orientation="horizontal"
+        android:padding="4dp">
 
         <RadioButton
             android:id="@+id/pos_type_bd"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_weight="1"
+            android:background="@drawable/bg_segment_selected"
+            android:backgroundTint="@color/segment_bg_tint"
+            android:button="@null"
             android:checked="true"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center"
             android:text="@string/input_position_baidu"
-            android:textColor="@color/on_surface"
-            android:textSize="14sp" />
+            android:textColor="@color/segment_text_tint"
+            android:textSize="@dimen/text_label" />
 
         <RadioButton
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_weight="1"
+            android:background="@drawable/bg_segment_selected"
+            android:backgroundTint="@color/segment_bg_tint"
+            android:button="@null"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center"
             android:text="@string/input_position_gps"
-            android:textColor="@color/on_surface"
-            android:textSize="14sp" />
+            android:textColor="@color/segment_text_tint"
+            android:textSize="@dimen/text_label" />
     </RadioGroup>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="20dp"
         android:orientation="horizontal">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/input_position_cancel"
-            style="@style/Widget.Material3.Button.OutlinedButton"
+            style="@style/Widget.App.Button.Outlined"
             android:layout_width="0dp"
-            android:layout_height="50dp"
+            android:layout_height="48dp"
             android:layout_weight="1"
             android:text="@string/input_position_cancel"
             android:textAllCaps="false" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/input_position_ok"
+            style="@style/Widget.App.Button"
             android:layout_width="0dp"
-            android:layout_height="50dp"
+            android:layout_height="48dp"
             android:layout_marginStart="12dp"
             android:layout_weight="1"
             android:text="@string/input_position_ok"
-            android:textAllCaps="false"
-            app:cornerRadius="14dp" />
+            android:textAllCaps="false" />
     </LinearLayout>
 </LinearLayout>

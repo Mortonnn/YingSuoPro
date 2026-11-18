@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Material 3 Expressive 配色（深色），与浅色使用同一套语义角色。 -->
+    <color name="primary">#9CD67E</color>
+    <color name="on_primary">#0A3900</color>
+    <color name="primary_container">#1F5219</color>
+    <color name="on_primary_container">#B7F397</color>
+    <color name="secondary">#BDCBB0</color>
+    <color name="on_secondary">#283420</color>
+    <color name="secondary_container">#3E4B35</color>
+    <color name="on_secondary_container">#D9E7CB</color>
+    <color name="tertiary">#A0CFD0</color>
+    <color name="on_tertiary">#003738</color>
+    <color name="tertiary_container">#1F4E4F</color>
+    <color name="on_tertiary_container">#BBEBEC</color>
+    <color name="error">#FFB4AB</color>
+    <color name="on_error">#690005</color>
+    <color name="error_container">#93000A</color>
+    <color name="on_error_container">#FFDAD6</color>
+
+    <color name="background">#11140F</color>
+    <color name="on_background">#E2E3DA</color>
+    <color name="surface">#11140F</color>
+    <color name="on_surface">#E2E3DA</color>
+    <color name="surface_variant">#43483E</color>
+    <color name="on_surface_variant">#C3C8BB</color>
+    <color name="surface_container_lowest">#0C0F0B</color>
+    <color name="surface_container_low">#191D17</color>
+    <color name="surface_container">#1D211B</color>
+    <color name="surface_container_high">#282C25</color>
+    <color name="surface_container_highest">#33372F</color>
+    <color name="outline">#8D9385</color>
+    <color name="outline_variant">#43483E</color>
+    <color name="inverse_surface">#E2E3DA</color>
+    <color name="inverse_on_surface">#2F312C</color>
+    <color name="inverse_primary">#386A20</color>
+    <color name="scrim">#000000</color>
+
+    <color name="map_location_blue">#8AB4F8</color>
+    <color name="route_line">#9CD67E</color>
+    <color name="map_surface_tint">#1D2A1B</color>
+
+    <color name="colorPrimary">@color/primary</color>
+    <color name="colorPrimaryDark">#B7F397</color>
+    <color name="colorAccent">@color/primary</color>
+    <color name="app_background">@color/background</color>
+    <color name="muted">@color/on_surface_variant</color>
+    <color name="danger">@color/error</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="gray">#9AA0A6</color>
+    <color name="transparent">#00000000</color>
+</resources>

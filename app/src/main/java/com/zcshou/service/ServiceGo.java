@@ -25,6 +25,7 @@ import android.os.Message;
 import android.os.Process;
 import android.os.SystemClock;
 import android.text.TextUtils;
+import android.view.ContextThemeWrapper;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -233,7 +234,7 @@ public class ServiceGo extends Service {
     }
 
     private void initJoyStick() {
-        mJoyStick = new JoyStick(this);
+        mJoyStick = new JoyStick(new ContextThemeWrapper(this, R.style.AppTheme));
         mJoyStick.setListener(new JoyStick.JoyStickClickListener() {
             @Override
             public void onMoveInfo(double speed, double disLng, double disLat, double angle) {

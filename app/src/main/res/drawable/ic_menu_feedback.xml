@@ -1,5 +1,11 @@
-<vector android:height="24dp" android:viewportHeight="1024"
-    android:viewportWidth="1024" android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
-    <path android:fillColor="#FF000000" android:pathData="M511.61,961.62"/>
-    <path android:fillColor="#FF000000" android:pathData="M946.87,147.17l-70.84,-70.85c-16.32,-16.08 -42.42,-16.08 -58.5,0l-74.12,74.11 129.34,129.34 74.11,-73.88C962.95,189.35 962.95,163.25 946.87,147.17L946.87,147.17 946.87,147.17zM721.51,172.57 L320.67,586.23 287.82,735.38l149.15,-32.86 411.56,-403.17L721.51,172.57 721.51,172.57zM809.84,511.65l0,349.57c0,11.89 -9.08,23.54 -21.44,23.54 -12.35,0 -626.9,-0.24 -626.9,-0.24 -13.05,0 -22.84,-12.58 -22.84,-23.31L138.66,236.65c0,-11.65 10.95,-23.31 24.71,-23.31l348.17,0 74.57,-74.57 -467.49,0c-30.3,0 -54.54,24 -54.54,54.3l0,711.5c0,30.06 24.47,54.53 54.54,54.53l711.49,0c30.06,0 54.3,-24.47 54.3,-54.53L884.41,437.08 809.84,511.65 809.84,511.65 809.84,511.65zM809.84,511.65"/>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Material Symbols Rounded "feedback" (Apache License 2.0), fetched from fonts.gstatic.com -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="960"
+    android:viewportHeight="960">
+    <group android:translateY="960">
+        <path android:fillColor="#FF000000" android:pathData="M480-360q17 0 28.5-11.5T520-400q0-17-11.5-28.5T480-440q-17 0-28.5 11.5T440-400q0 17 11.5 28.5T480-360Zm28.5-171.5Q520-543 520-560v-160q0-17-11.5-28.5T480-760q-17 0-28.5 11.5T440-720v160q0 17 11.5 28.5T480-520q17 0 28.5-11.5ZM240-240l-92 92q-19 19-43.5 8.5T80-177v-623q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240Zm-34-80h594v-480H160v525l46-45Zm-46 0v-480 480Z"/>
+    </group>
 </vector>

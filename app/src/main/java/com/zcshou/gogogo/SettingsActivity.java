@@ -3,7 +3,7 @@ package com.zcshou.gogogo;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import androidx.appcompat.app.ActionBar;
+import com.google.android.material.appbar.MaterialToolbar;
 
 public class SettingsActivity extends BaseActivity {
 
@@ -17,21 +17,19 @@ public class SettingsActivity extends BaseActivity {
          * 2. WelcomeActivity 单独处理，其他 Activity 手动填充 StatusBar
          * */
 
-
         setContentView(R.layout.activity_settings);
-        
+
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            toolbar.setNavigationOnClickListener(v -> finish());
+        }
+
         if (savedInstanceState == null) {
             getSupportFragmentManager()
             .beginTransaction()
             .replace(R.id.settings, new FragmentSettings())
             .commit();
-        }
-
-        /* 获取默认的顶部的标题栏（安卓称为 ActionBar）*/
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setTitle(R.string.app_settings);
-            actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
 

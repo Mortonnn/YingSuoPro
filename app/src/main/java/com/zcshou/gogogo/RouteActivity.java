@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -24,29 +25,28 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
-import android.widget.SearchView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.baidu.location.BDAbstractLocationListener;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.baidu.location.BDLocation;
-import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
@@ -69,8 +69,10 @@ import com.elvishew.xlog.XLog;
 import com.zcshou.database.DataBaseHistoryRoute;
 import com.zcshou.route.RouteSimulator;
 import com.zcshou.service.ServiceGo;
+import com.zcshou.utils.DeviceLocationHelper;
 import com.zcshou.utils.GoUtils;
 import com.zcshou.utils.MapUtils;
+import com.zcshou.utils.PlaceSearchHelper;
 import com.zcshou.utils.RouteUtils;
 
 import java.util.ArrayList;
@@ -92,10 +94,9 @@ public class RouteActivity extends BaseActivity {
     /*============================== 地图相关 ==============================*/
     private TextureMapView mMapView;
     private BaiduMap mBaiduMap;
-    private LocationClient mLocClient;
+    private DeviceLocationHelper mLocationHelper;
     private LatLng mCurLatLng = null;       // 当前的真实位置
     private BitmapDescriptor mPointIndicator = null;
-    private BitmapDescriptor mArrowIndicator = null;
     private final List<LatLng> mRoutePoints = new ArrayList<>();    // 规划中的途经点
     private final List<Marker> mPointMarkers = new ArrayList<>();
     private Polyline mRoutePolyline = null;
@@ -119,18 +120,23 @@ public class RouteActivity extends BaseActivity {
     private TextView mStatusText;
     private ProgressBar mProgressBar;
     private ImageButton mPauseButton;
+    private ImageButton mStartButton;
     private SearchView mSearchView;
     private ListView mSearchList;
     private LinearLayout mSearchLayout;
 
     private SuggestionSearch mSuggestionSearch;
     private final Handler mRefreshHandler = new Handler(Looper.getMainLooper());
+    private final Handler mSearchHandler = new Handler(Looper.getMainLooper());
+    private Runnable mSearchRunnable;
+    private Runnable mBaiduTimeoutRunnable;
+    private String mPendingSearchKeyword = null;
     /*============================== 历史路线相关 ==============================*/
     private SQLiteDatabase mRouteHistoryDB;
     private LinearLayout mHistoryLayout;
     private RecyclerView mHistoryListView;
     private HistoryAdapter mHistoryAdapter;
-    private TextView mHistoryNoText;
+    private View mHistoryNoText;
     private List<Map<String, Object>> mHistoryRecords = new ArrayList<>();
     private View mHistoryHandle;
     private LinearLayout mRoutePanel;
@@ -148,14 +154,16 @@ public class RouteActivity extends BaseActivity {
          * 2. WelcomeActivity 单独处理，其他 Activity 手动填充 StatusBar
          * */
         setContentView(R.layout.activity_route);
+        // 路线页搜索框常驻展开但不应在进入页面时自动弹出输入法
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(false);
-            actionBar.setDisplayShowCustomEnabled(true);
-            actionBar.setCustomView(R.layout.actionbar_route_title);
-            actionBar.setDisplayHomeAsUpEnabled(true);
+        MaterialToolbar toolbar = findViewById(R.id.route_toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(R.string.route_title);
+            getSupportActionBar().setSubtitle(R.string.route_toolbar_subtitle);
         }
+        toolbar.setNavigationOnClickListener(v -> finish());
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -189,6 +197,16 @@ public class RouteActivity extends BaseActivity {
             mPauseButton.setImageResource(R.drawable.ic_route_pause);
             mStatusText.setText(getResources().getString(R.string.route_status_run));
 
+            if (mStartButton != null) {
+                mStartButton.setImageResource(R.drawable.ic_route_stop);
+                mStartButton.setContentDescription(getResources().getString(R.string.route_btn_stop));
+            }
+
+            View centerMarker = findViewById(R.id.route_center_marker);
+            if (centerMarker != null) {
+                centerMarker.setVisibility(View.GONE);
+            }
+
             if (!isServiceBound) {
                 Intent serviceGoIntent = new Intent(RouteActivity.this, ServiceGo.class);
                 bindService(serviceGoIntent, mConnection, BIND_AUTO_CREATE);
@@ -215,9 +233,15 @@ public class RouteActivity extends BaseActivity {
             isServiceBound = false;
         }
 
-        mLocClient.stop();
         mBaiduMap.setMyLocationEnabled(false);
         mMapView.onDestroy();
+
+        if (mLocationHelper != null) {
+            mLocationHelper.stop();
+        }
+        if (mSearchHandler != null) {
+            mSearchHandler.removeCallbacksAndMessages(null);
+        }
 
         mRouteHistoryDB.close();
 
@@ -282,7 +306,9 @@ public class RouteActivity extends BaseActivity {
         mMapView = findViewById(R.id.route_map_view);
         mMapView.showZoomControls(false);
         mBaiduMap = mMapView.getMap();
-        mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
+        String mapStyle = sharedPreferences.getString("setting_map_style", "normal");
+        mBaiduMap.setMapType("satellite".equals(mapStyle)
+                ? BaiduMap.MAP_TYPE_SATELLITE : BaiduMap.MAP_TYPE_NORMAL);
         mBaiduMap.setMyLocationEnabled(true);
 
         /* 在准星模式下，位置由屏幕中心的准星决定，地图本身的点击不再添加途经点 */
@@ -358,96 +384,48 @@ public class RouteActivity extends BaseActivity {
         return mapStatus.target;
     }
 
-    // 开启地图的定位图层
+    // 开启地图的定位图层（使用系统定位，避免百度定位 AK 失效时无法定位）
     private void initMapLocation() {
-        try {
-            // 定位初始化
-            mLocClient = new LocationClient(this);
-            mLocClient.registerLocationListener(new BDAbstractLocationListener() {
-                @Override
-                public void onReceiveLocation(BDLocation bdLocation) {
-                    if (bdLocation == null || mMapView == null) {// mapview 销毁后不在处理新接收的位置
-                        return;
-                    }
+        mLocationHelper = new DeviceLocationHelper(this);
+        mLocationHelper.start(location -> {
+            if (mMapView == null) {// mapview 销毁后不再处理新接收的位置
+                return;
+            }
 
-                    /* 如果出现错误，则需要重新请求位置 */
-                    int err = bdLocation.getLocType();
-                    if (err == BDLocation.TypeCriteriaException || err == BDLocation.TypeNetWorkException) {
-                        mLocClient.requestLocation();   /* 请求位置 */
-                        return;
-                    }
+            double[] bd = MapUtils.wgs2bd09(location.getLongitude(), location.getLatitude());
+            if (!DeviceLocationHelper.isValidLatLng(bd[1], bd[0])) {
+                return;
+            }
 
-                    /* 定位失败时会返回 0 或者无效坐标，直接用会把地图带到几内亚湾（(0,0) 附近） */
-                    if (!isValidLatLng(bdLocation.getLatitude(), bdLocation.getLongitude())) {
-                        XLog.e("ERROR: invalid location, type = " + err);
-                        return;
-                    }
+            applyCurrentLocation(new LatLng(bd[1], bd[0]),
+                    location.hasAccuracy() ? location.getAccuracy() : 0.0f);
 
-                    mCurLatLng = new LatLng(bdLocation.getLatitude(), bdLocation.getLongitude());
+            if (isFirstLoc) {
+                isFirstLoc = false;
+                MapStatus.Builder builder = new MapStatus.Builder();
+                builder.target(mCurLatLng).zoom(18.0f);
+                mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
 
-                    if (isFirstLoc) {
-                        isFirstLoc = false;
-                        MapStatus.Builder builder = new MapStatus.Builder();
-                        builder.target(mCurLatLng).zoom(18.0f);
-                        mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
-
-                        XLog.i("First route Baidu LatLng: " + mCurLatLng);
-                    }
-                }
-            });
-            LocationClientOption locationOption = getLocationClientOption();
-            //需将配置好的LocationClientOption对象，通过setLocOption方法传递给LocationClient对象使用
-            mLocClient.setLocOption(locationOption);
-            //开始定位
-            mLocClient.start();
-        } catch (Exception e) {
-            XLog.e("ERROR: initMapLocation");
-        }
+                XLog.i("First route system LatLng: " + mCurLatLng);
+            }
+        });
     }
 
-    /* 判断定位结果是否可用，(0,0) 以及超出了经纬度范围的值都视为无效 */
-    private static boolean isValidLatLng(double latitude, double longitude) {
-        if (Double.isNaN(latitude) || Double.isNaN(longitude)
-                || Double.isInfinite(latitude) || Double.isInfinite(longitude)) {
-            return false;
+    /* 把 BD09 坐标写进百度地图的定位图层，并缓存为当前位置 */
+    private void applyCurrentLocation(LatLng latLng, float accuracy) {
+        if (latLng == null) {
+            return;
         }
-
-        if (Math.abs(latitude) < 0.000001 && Math.abs(longitude) < 0.000001) {
-            return false;
-        }
-
-        return latitude >= -90.0 && latitude <= 90.0 && longitude >= -180.0 && longitude <= 180.0;
-    }
-
-    @NonNull
-    private static LocationClientOption getLocationClientOption() {
-        LocationClientOption locationOption = new LocationClientOption();
-        //可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
-        locationOption.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
-        //可选，默认gcj02，设置返回的定位结果坐标系，如果配合百度地图使用，建议设置为bd09ll;
-        locationOption.setCoorType("bd09ll");
-        //可选，默认0，即仅定位一次，设置发起连续定位请求的间隔需要大于等于1000ms才是有效的
-        locationOption.setScanSpan(1000);
-        //可选，设置是否需要地址信息，默认不需要
-        locationOption.setIsNeedAddress(false);
-        //可选，设置是否需要设备方向结果
-        locationOption.setNeedDeviceDirect(false);
-        //可选，默认false，设置是否当gps有效时按照1S1次频率输出GPS结果
-        locationOption.setLocationNotify(true);
-        //可选，默认true，定位SDK内部是一个SERVICE，并放到了独立进程，设置是否在stop的时候杀死这个进程，默认不杀死
-        locationOption.setIgnoreKillProcess(true);
-        //可选，默认false，设置是否需要位置语义化结果，可以在BDLocation.getLocationDescribe里得到，结果类似于“在北京天安门附近”
-        locationOption.setIsNeedLocationDescribe(false);
-        //可选，默认false，设置是否需要POI结果，可以在BDLocation.getPoiList里得到
-        locationOption.setIsNeedLocationPoiList(false);
-        //可选，默认false，设置是否收集CRASH信息，默认收集
-        locationOption.SetIgnoreCacheException(true);
-        //可选，默认false，设置是否开启Gps定位
-        //locationOption.setOpenGps(true);
-        locationOption.setOpenGnss(true);
-        //可选，默认false，设置定位时是否需要海拔信息，默认不需要，除基础定位版本都可用
-        locationOption.setIsNeedAltitude(false);
-        return locationOption;
+        mCurLatLng = latLng;
+        MyLocationData locData = new MyLocationData.Builder()
+                .accuracy(accuracy)
+                .direction(0)
+                .latitude(latLng.latitude)
+                .longitude(latLng.longitude)
+                .build();
+        mBaiduMap.setMyLocationData(locData);
+        mBaiduMap.setMyLocationConfiguration(new MyLocationConfiguration(
+                MyLocationConfiguration.LocationMode.NORMAL, true, null));
     }
 
     private void initMapButton() {
@@ -461,16 +439,57 @@ public class RouteActivity extends BaseActivity {
         zoomOutBtn.setOnClickListener(v -> mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomOut()));
     }
 
-    /* 恢复当前位置，沿用主界面 resetMap 的做法：
-     * 有真实定位就用真实定位，没有就退回模拟位置，都不存在时提示用户点地图选位置 */
+    /* 恢复当前位置：
+     * 1. 路线正在运行时优先回到模拟位置；
+     * 2. 有真实定位就用真实定位；
+     * 3. 没有定位时向系统请求一次定位，超时后给出明确提示，不再直接报“定位失败”。 */
     private void resetMap() {
+        if (isRouteRunning && mServiceBinder != null) {
+            RouteSimulator simulator = mServiceBinder.getRouteSimulator();
+            if (simulator != null) {
+                double[] lngLat = simulator.getCurrentPosition();
+                double[] bd = MapUtils.wgs2bd09(lngLat[0], lngLat[1]);
+                centerMap(bd[1], bd[0]);
+                return;
+            }
+        }
+
         if (mCurLatLng == null) {
-            GoUtils.DisplayToast(this, getResources().getString(R.string.history_error_location));
+            MyLocationData locationData = mBaiduMap.getLocationData();
+            if (locationData != null
+                    && DeviceLocationHelper.isValidLatLng(locationData.latitude, locationData.longitude)) {
+                mCurLatLng = new LatLng(locationData.latitude, locationData.longitude);
+            }
+        }
+
+        if (mCurLatLng != null) {
+            centerMap(mCurLatLng.latitude, mCurLatLng.longitude);
             return;
         }
 
+        GoUtils.DisplayToast(this, getResources().getString(R.string.app_location_wait));
+        if (mLocationHelper != null) {
+            mLocationHelper.requestOnce(new DeviceLocationHelper.OnceListener() {
+                @Override
+                public void onLocation(@NonNull Location location) {
+                    double[] bd = MapUtils.wgs2bd09(location.getLongitude(), location.getLatitude());
+                    applyCurrentLocation(new LatLng(bd[1], bd[0]),
+                            location.hasAccuracy() ? location.getAccuracy() : 0.0f);
+                    centerMap(bd[1], bd[0]);
+                }
+
+                @Override
+                public void onTimeout() {
+                    GoUtils.DisplayToast(RouteActivity.this,
+                            getResources().getString(R.string.app_location_unavailable));
+                }
+            });
+        }
+    }
+
+    private void centerMap(double latitude, double longitude) {
         MapStatus.Builder builder = new MapStatus.Builder();
-        builder.target(mCurLatLng).zoom(18.0f);
+        builder.target(new LatLng(latitude, longitude)).zoom(18.0f);
         mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
     }
 
@@ -504,15 +523,6 @@ public class RouteActivity extends BaseActivity {
         return mPointIndicator;
     }
 
-    /* 获取当前位置的箭头图标，箭头朝向由 MyLocationData 的 direction 决定 */
-    private BitmapDescriptor getArrowIndicator() {
-        if (mArrowIndicator == null) {
-            mArrowIndicator = getBitmapDescriptor(R.drawable.ic_route_arrow);
-        }
-
-        return mArrowIndicator;
-    }
-
     private BitmapDescriptor getBitmapDescriptor(int resId) {
         Drawable drawable = ContextCompat.getDrawable(this, resId);
 
@@ -539,7 +549,7 @@ public class RouteActivity extends BaseActivity {
         mPointMarkers.add(marker);
     }
 
-    /* 刷新模拟位置，箭头方向跟随运动方向 */
+    /* 刷新模拟位置：使用百度地图原生的蓝色定位点，与首页保持一致 */
     private void updateSimulateLocation(double lng, double lat, float direction) {
         if (mBaiduMap == null) {
             return;
@@ -555,9 +565,6 @@ public class RouteActivity extends BaseActivity {
 
         MyLocationConfiguration configuration = new MyLocationConfiguration(
                 MyLocationConfiguration.LocationMode.NORMAL, true, null);
-        configuration.setCustomMarker(getArrowIndicator());
-        configuration.enableDirection = true;
-        configuration.setMarkerRotation(true);
         mBaiduMap.setMyLocationConfiguration(configuration);
     }
 
@@ -571,7 +578,7 @@ public class RouteActivity extends BaseActivity {
         if (mRoutePoints.size() >= 2) {
             List<LatLng> smoothPoints = RouteUtils.smoothRoute(mRoutePoints);
             PolylineOptions ooPolyline = new PolylineOptions()
-                    .width(12)
+                    .width((int) (5 * getResources().getDisplayMetrics().density))
                     .color(ContextCompat.getColor(this, R.color.route_line))
                     .points(smoothPoints);
             mRoutePolyline = (Polyline) mBaiduMap.addOverlay(ooPolyline);
@@ -626,9 +633,27 @@ public class RouteActivity extends BaseActivity {
         mSearchList = findViewById(R.id.route_search_list_view);
         mSearchView = findViewById(R.id.route_search_view);
 
-        /* 与主界面保持一致：默认是收起的搜索图标，展开后才显示输入框 */
-        mSearchView.setIconified(true);
-        mSearchView.onActionViewCollapsed();
+        /* 路线页搜索条常驻展开，直接输入即可搜索 */
+        mSearchView.setIconified(false);
+        mSearchView.post(() -> {
+            mSearchView.clearFocus();
+            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(mSearchView.getWindowToken(), 0);
+            }
+        });
+
+        /* SearchView 内置图标使用 Material Symbols 矢量图，这里统一按语义色着色以适配深色模式 */
+        int searchIconColor = ContextCompat.getColor(this, R.color.on_surface_variant);
+        ImageView searchButton = mSearchView.findViewById(androidx.appcompat.R.id.search_button);
+        if (searchButton != null) {
+            searchButton.setColorFilter(searchIconColor);
+        }
+        ImageView closeButton = mSearchView.findViewById(androidx.appcompat.R.id.search_close_btn);
+        if (closeButton != null) {
+            closeButton.setColorFilter(searchIconColor);
+        }
+
         mSearchView.setOnSearchClickListener(v -> {
         });
         mSearchView.setOnCloseListener(() -> {
@@ -639,22 +664,19 @@ public class RouteActivity extends BaseActivity {
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                return false;
+                if (query != null && !query.trim().isEmpty()) {
+                    cancelScheduledSearch();
+                    performSearch(query.trim());
+                }
+                return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (newText != null && !newText.isEmpty()) {
-                    try {
-                        mSuggestionSearch.requestSuggestion((new SuggestionSearchOption())
-                                .keyword(newText)
-                                .city(MainActivity.mCurrentCity)
-                        );
-                    } catch (Exception e) {
-                        GoUtils.DisplayToast(RouteActivity.this, getResources().getString(R.string.app_error_search));
-                        XLog.d(getResources().getString(R.string.app_error_search));
-                    }
+                if (newText != null && !newText.trim().isEmpty()) {
+                    scheduleSearch(newText.trim());
                 } else {
+                    cancelScheduledSearch();
                     mSearchLayout.setVisibility(View.GONE);
                 }
 
@@ -672,45 +694,155 @@ public class RouteActivity extends BaseActivity {
 
             mSearchLayout.setVisibility(View.GONE);
             mSearchView.clearFocus();
-            mSearchView.onActionViewCollapsed();
         });
 
         //设置搜索建议返回值监听
         mSuggestionSearch = SuggestionSearch.newInstance();
         mSuggestionSearch.setOnGetSuggestionResultListener(suggestionResult -> {
-            if (suggestionResult == null || suggestionResult.getAllSuggestions() == null) {
-                GoUtils.DisplayToast(this, getResources().getString(R.string.app_search_null));
-            } else {
-                List<Map<String, Object>> data = getMapList(suggestionResult);
+            if (mBaiduTimeoutRunnable != null) {
+                mSearchHandler.removeCallbacks(mBaiduTimeoutRunnable);
+                mBaiduTimeoutRunnable = null;
+            }
 
-                SimpleAdapter simAdapt = new SimpleAdapter(
-                        RouteActivity.this,
-                        data,
-                        R.layout.search_poi_item,
-                        new String[] {MainActivity.POI_NAME, MainActivity.POI_ADDRESS,
-                                MainActivity.POI_LONGITUDE, MainActivity.POI_LATITUDE}, // 与下面数组元素要一一对应
-                        new int[] {R.id.poi_name, R.id.poi_address, R.id.poi_longitude, R.id.poi_latitude});
-                mSearchList.setAdapter(simAdapt);
-                mSearchLayout.setVisibility(View.VISIBLE);
+            if (suggestionResult != null
+                    && suggestionResult.error == com.baidu.mapapi.search.core.SearchResult.ERRORNO.NO_ERROR
+                    && suggestionResult.getAllSuggestions() != null) {
+                List<Map<String, Object>> data = getMapList(suggestionResult);
+                if (!data.isEmpty()) {
+                    showSearchResults(data);
+                    return;
+                }
+            }
+
+            if (suggestionResult != null && suggestionResult.error != null) {
+                XLog.e("Baidu suggestion error: " + suggestionResult.error);
+                if (suggestionResult.error == com.baidu.mapapi.search.core.SearchResult.ERRORNO.KEY_ERROR
+                        || suggestionResult.error == com.baidu.mapapi.search.core.SearchResult.ERRORNO.PERMISSION_UNFINISHED
+                        || suggestionResult.error == com.baidu.mapapi.search.core.SearchResult.ERRORNO.NO_ADVANCED_PERMISSION
+                        || suggestionResult.error == com.baidu.mapapi.search.core.SearchResult.ERRORNO.REQUEST_ERROR) {
+                    PlaceSearchHelper.markBaiduUnavailable();
+                }
+            }
+
+            if (mPendingSearchKeyword != null) {
+                searchWithFallback(mPendingSearchKeyword);
             }
         });
+    }
+
+    /* 输入停止 350ms 后再发起搜索，避免每敲一个字都请求一次网络 */
+    private void scheduleSearch(final String keyword) {
+        cancelScheduledSearch();
+        mPendingSearchKeyword = keyword;
+        if (mBaiduTimeoutRunnable != null) {
+            mSearchHandler.removeCallbacks(mBaiduTimeoutRunnable);
+            mBaiduTimeoutRunnable = null;
+        }
+        mSearchRunnable = () -> performSearch(keyword);
+        mSearchHandler.postDelayed(mSearchRunnable, 350);
+    }
+
+    private void cancelScheduledSearch() {
+        if (mSearchRunnable != null) {
+            mSearchHandler.removeCallbacks(mSearchRunnable);
+            mSearchRunnable = null;
+        }
+    }
+
+    /* 优先使用百度地点建议；百度 AK 不可用或超时时自动切换到开源 OSM 搜索 */
+    private void performSearch(final String keyword) {
+        mPendingSearchKeyword = keyword;
+
+        if (mBaiduTimeoutRunnable != null) {
+            mSearchHandler.removeCallbacks(mBaiduTimeoutRunnable);
+            mBaiduTimeoutRunnable = null;
+        }
+
+        if (PlaceSearchHelper.isBaiduAvailable()) {
+            try {
+                String city = TextUtils.isEmpty(MainActivity.mCurrentCity) ? "全国" : MainActivity.mCurrentCity;
+                mSuggestionSearch.requestSuggestion(new SuggestionSearchOption()
+                        .keyword(keyword)
+                        .city(city));
+
+                mBaiduTimeoutRunnable = () -> {
+                    if (keyword.equals(mPendingSearchKeyword)) {
+                        PlaceSearchHelper.markBaiduUnavailable();
+                        searchWithFallback(keyword);
+                    }
+                };
+                mSearchHandler.postDelayed(mBaiduTimeoutRunnable, 1800);
+                return;
+            } catch (Exception e) {
+                XLog.e("Baidu suggestion request failed: " + e.getClass().getSimpleName());
+                PlaceSearchHelper.markBaiduUnavailable();
+            }
+        }
+
+        searchWithFallback(keyword);
+    }
+
+    private void searchWithFallback(final String keyword) {
+        PlaceSearchHelper.searchFallback(this, keyword, items -> {
+            if (!keyword.equals(mPendingSearchKeyword)) {
+                return;
+            }
+            if (items.isEmpty()) {
+                mSearchLayout.setVisibility(View.GONE);
+                GoUtils.DisplayToast(this, getResources().getString(R.string.app_search_null));
+                return;
+            }
+
+            List<Map<String, Object>> data = new ArrayList<>();
+            for (PlaceSearchHelper.Poi poi : items) {
+                Map<String, Object> poiItem = new HashMap<>();
+                poiItem.put(MainActivity.POI_NAME, poi.name);
+                poiItem.put(MainActivity.POI_ADDRESS, poi.address);
+                poiItem.put(MainActivity.POI_LONGITUDE, String.valueOf(poi.longitude));
+                poiItem.put(MainActivity.POI_LATITUDE, String.valueOf(poi.latitude));
+                data.add(poiItem);
+            }
+            showSearchResults(data);
+        });
+    }
+
+    private void showSearchResults(List<Map<String, Object>> data) {
+        if (mSearchList == null || data == null || data.isEmpty()) {
+            return;
+        }
+        SimpleAdapter simAdapt = new SimpleAdapter(
+                RouteActivity.this,
+                data,
+                R.layout.search_poi_item,
+                new String[] {MainActivity.POI_NAME, MainActivity.POI_ADDRESS,
+                        MainActivity.POI_LONGITUDE, MainActivity.POI_LATITUDE}, // 与下面数组元素要一一对应
+                new int[] {R.id.poi_name, R.id.poi_address, R.id.poi_longitude, R.id.poi_latitude});
+        mSearchList.setAdapter(simAdapt);
+        mSearchLayout.setVisibility(View.VISIBLE);
     }
 
     @NonNull
     private static List<Map<String, Object>> getMapList(SuggestionResult suggestionResult) {
         List<Map<String, Object>> data = new ArrayList<>();
+        if (suggestionResult == null || suggestionResult.getAllSuggestions() == null) {
+            return data;
+        }
         int retCnt = suggestionResult.getAllSuggestions().size();
 
         for (int i = 0; i < retCnt; i++) {
-            if (suggestionResult.getAllSuggestions().get(i).pt == null) {
+            SuggestionResult.SuggestionInfo info = suggestionResult.getAllSuggestions().get(i);
+            if (info == null || info.pt == null || TextUtils.isEmpty(info.key)) {
                 continue;
             }
 
+            String city = info.city == null ? "" : info.city;
+            String district = info.district == null ? "" : info.district;
+
             Map<String, Object> poiItem = new HashMap<>();
-            poiItem.put(MainActivity.POI_NAME, suggestionResult.getAllSuggestions().get(i).key);
-            poiItem.put(MainActivity.POI_ADDRESS, suggestionResult.getAllSuggestions().get(i).city + " " + suggestionResult.getAllSuggestions().get(i).district);
-            poiItem.put(MainActivity.POI_LONGITUDE, "" + suggestionResult.getAllSuggestions().get(i).pt.longitude);
-            poiItem.put(MainActivity.POI_LATITUDE, "" + suggestionResult.getAllSuggestions().get(i).pt.latitude);
+            poiItem.put(MainActivity.POI_NAME, info.key);
+            poiItem.put(MainActivity.POI_ADDRESS, (city + " " + district).trim());
+            poiItem.put(MainActivity.POI_LONGITUDE, "" + info.pt.longitude);
+            poiItem.put(MainActivity.POI_LATITUDE, "" + info.pt.latitude);
             data.add(poiItem);
         }
         return data;
@@ -751,9 +883,9 @@ public class RouteActivity extends BaseActivity {
                 return;
             }
 
-            new AlertDialog.Builder(this)
-                    .setTitle("警告")//这里是表头的内容
-                    .setMessage("确定要清空当前规划的路线吗?")//这里是中间显示的具体信息
+            new MaterialAlertDialogBuilder(this)
+                    .setTitle("清空路线")//这里是表头的内容
+                    .setMessage("确定要清空当前规划的路线吗？")//这里是中间显示的具体信息
                     .setPositiveButton("确定", (dialog, which) -> clearRoute())
                     .setNegativeButton("取消", (dialog, which) -> {
                     })
@@ -779,8 +911,8 @@ public class RouteActivity extends BaseActivity {
         initHistoryPanel();
 
         /* 开始 / 停止模拟 */
-        ImageButton startBtn = findViewById(R.id.route_start);
-        startBtn.setOnClickListener(v -> {
+        mStartButton = findViewById(R.id.route_start);
+        mStartButton.setOnClickListener(v -> {
             if (isRouteRunning) {
                 stopRouteMock();
             } else {
@@ -1056,10 +1188,10 @@ public class RouteActivity extends BaseActivity {
         input.setText(name);
         input.setSelection(input.length());
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
         builder.setTitle(getResources().getString(R.string.route_name_title));
         builder.setView(input);
-        builder.setPositiveButton("确认", (dialog, whichButton) -> {
+        builder.setPositiveButton("确定", (dialog, whichButton) -> {
             String userInput = input.getText().toString().trim();
 
             if (TextUtils.isEmpty(userInput)) {
@@ -1140,10 +1272,10 @@ public class RouteActivity extends BaseActivity {
         input.setText(RouteUtils.getDefaultName(mRoutePoints));
         input.setSelection(input.length());
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
         builder.setTitle(getResources().getString(R.string.route_name_title));
         builder.setView(input);
-        builder.setPositiveButton("确认", (dialog, whichButton) -> {
+        builder.setPositiveButton("确定", (dialog, whichButton) -> {
             String routeName = input.getText().toString().trim();
 
             if (TextUtils.isEmpty(routeName)) {
@@ -1162,7 +1294,7 @@ public class RouteActivity extends BaseActivity {
     }
 
     private void showSpeedDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
         builder.setTitle(getResources().getString(R.string.route_speed_title));
 
         View view = LayoutInflater.from(this).inflate(R.layout.route_speed_dialog, null);
@@ -1180,7 +1312,7 @@ public class RouteActivity extends BaseActivity {
         editLoop.setText(Integer.toString(mRouteLoop));
         editAltitude.setText(String.format(Locale.US, "%.1f", mRouteAltitude));
 
-        builder.setPositiveButton("确认", (dialog, whichButton) -> {
+        builder.setPositiveButton("确定", (dialog, whichButton) -> {
             try {
                 mRouteSpeed = Double.parseDouble(editSpeed.getText().toString());
                 mRouteSpeedFloat = Double.parseDouble(editSpeedFloat.getText().toString());
@@ -1302,6 +1434,17 @@ public class RouteActivity extends BaseActivity {
         mStatusText.setText(getResources().getString(R.string.route_status_run));
         mProgressBar.setProgress(0);
 
+        if (mStartButton != null) {
+            mStartButton.setImageResource(R.drawable.ic_route_stop);
+            mStartButton.setContentDescription(getResources().getString(R.string.route_btn_stop));
+        }
+
+        /* 运行期间隐藏中心蓝色定位点，只保留百度地图原生的移动定位点 */
+        View centerMarker = findViewById(R.id.route_center_marker);
+        if (centerMarker != null) {
+            centerMarker.setVisibility(View.GONE);
+        }
+
         GoUtils.DisplayToast(this, getResources().getString(R.string.route_start_ok));
 
         if (GoUtils.isWifiEnabled(this)) {
@@ -1328,6 +1471,16 @@ public class RouteActivity extends BaseActivity {
         mStatusText.setText(getResources().getString(R.string.route_status_idle));
         mProgressBar.setProgress(0);
 
+        if (mStartButton != null) {
+            mStartButton.setImageResource(R.drawable.ic_route_play);
+            mStartButton.setContentDescription(getResources().getString(R.string.route_btn_start));
+        }
+
+        View centerMarker = findViewById(R.id.route_center_marker);
+        if (centerMarker != null) {
+            centerMarker.setVisibility(View.VISIBLE);
+        }
+
         GoUtils.DisplayToast(this, getResources().getString(R.string.route_stop_ok));
     }
 
@@ -1352,6 +1505,16 @@ public class RouteActivity extends BaseActivity {
                 mPauseButton.setVisibility(View.GONE);
                 mStatusText.setText(getResources().getString(R.string.route_status_idle));
                 mProgressBar.setProgress(100);
+
+                if (mStartButton != null) {
+                    mStartButton.setImageResource(R.drawable.ic_route_play);
+                    mStartButton.setContentDescription(getResources().getString(R.string.route_btn_start));
+                }
+
+                View centerMarker = findViewById(R.id.route_center_marker);
+                if (centerMarker != null) {
+                    centerMarker.setVisibility(View.VISIBLE);
+                }
 
                 unbindService(mConnection);
                 isServiceBound = false;

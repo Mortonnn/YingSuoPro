@@ -1,45 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 搜索历史 / 建议行：64dp 最小行高，40dp tonal 圆底 + history，名称 15sp / 说明 12sp -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
     android:baselineAligned="false"
-    android:minHeight="64dp"
-    android:paddingStart="20dp"
-    android:paddingTop="10dp"
-    android:paddingEnd="20dp"
-    android:paddingBottom="10dp">
+    android:gravity="center_vertical"
+    android:minHeight="@dimen/list_row_min_height"
+    android:orientation="horizontal"
+    android:paddingStart="16dp"
+    android:paddingTop="8dp"
+    android:paddingEnd="16dp"
+    android:paddingBottom="8dp">
+
+    <FrameLayout
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/bg_icon_circle">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_history"
+            android:tint="@color/on_secondary_container" />
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
+        android:layout_marginStart="12dp"
         android:layout_weight="1"
-        android:gravity="center_vertical"
         android:orientation="vertical"
         tools:ignore="UselessParent">
 
         <TextView
             android:id="@+id/search_key"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-medium"
+            android:maxLines="1"
             android:textColor="@color/on_surface"
-            android:textSize="16sp" />
+            android:textSize="@dimen/text_body" />
 
         <TextView
             android:id="@+id/search_description"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif"
+            android:maxLines="1"
             android:textColor="@color/on_surface_variant"
-            android:textSize="13sp" />
+            android:textSize="@dimen/text_caption" />
 
         <TextView
             android:id="@+id/search_timestamp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/on_surface_variant"
-            android:textSize="12sp"
+            android:textSize="@dimen/text_caption"
             android:visibility="gone" />
 
         <TextView
@@ -47,7 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/on_surface_variant"
-            android:textSize="12sp"
+            android:textSize="@dimen/text_caption"
             android:visibility="gone" />
 
         <TextView
@@ -55,7 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/on_surface_variant"
-            android:textSize="12sp"
+            android:textSize="@dimen/text_caption"
             android:visibility="gone" />
 
         <TextView
@@ -63,9 +86,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/on_surface_variant"
-            android:textSize="12sp"
+            android:textSize="@dimen/text_caption"
             android:visibility="gone" />
-
     </LinearLayout>
 
 </LinearLayout>

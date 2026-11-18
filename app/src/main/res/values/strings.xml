@@ -35,6 +35,7 @@
     <string name="app_error_search">查找失败，请检查网络或定位</string>
     <string name="app_error_location">请先选择位置</string>
     <string name="app_location_wait">正在定位，请稍后重试</string>
+    <string name="app_location_unavailable">未获取到定位，请检查系统定位开关和权限</string>
     <string name="app_error_dev">开发者模式未开启，无法跳转。请自行搜索开启方法。</string>
     <string name="app_error_param">参数无效</string>
     <string name="app_error_protocol">请先阅读并接受用户协议</string>
@@ -57,7 +58,7 @@
 
     <!-- 移动相关参数 -->
     <string name="setting_group_move">移动</string>
-    <string name="setting_joystick_type">摇杆类型</string>
+    <string name="setting_joystick_type">遥感</string>
     <string name="setting_walk">步行速度(米/秒)</string>
     <string name="setting_walk_default">1.2</string>
     <string name="setting_run">跑步速度(米/秒)</string>
@@ -120,7 +121,7 @@
     <string name="nav_menu_feedback">问题反馈</string>
     <string name="nav_menu_contact">项目主页</string>
     <string name="nav_app_tips">仅供学习使用，请遵守当地法律法规</string>
-    <string name="nav_app_subtitle">路线模拟增强版</string>
+    <string name="nav_app_subtitle">基于影梭修改</string>
 
     <!-- 主界面 -->
     <string name="label_longitude">经度</string>
@@ -143,11 +144,14 @@
     <string name="route_btn_add_point">添加途经点</string>
     <string name="route_map_tips">拖动地图，把准星对准要途经的位置，再点击下方的加号添加途经点</string>
     <string name="route_map_tip_short">拖动地图，对准点</string>
-    <string name="route_point_count">途经点: %1$d</string>
-    <string name="route_length">长度: %1$s</string>
-    <string name="route_speed">速度: %1$s m/s</string>
-    <string name="route_speed_title">速/频</string>
-    <string name="route_status_idle">未运行</string>
+    <string name="route_stat_point">途经点</string>
+    <string name="route_stat_length">长度</string>
+    <string name="route_stat_speed">速度</string>
+    <string name="route_point_count">%1$d</string>
+    <string name="route_length">%1$s</string>
+    <string name="route_speed">%1$s m/s</string>
+    <string name="route_speed_title">速度与频率</string>
+    <string name="route_status_idle">未开始</string>
     <string name="route_status_run">正在运行</string>
     <string name="route_status_pause">已暂停</string>
     <string name="route_btn_undo">撤销</string>
@@ -156,6 +160,8 @@
     <string name="route_btn_history">历史路线</string>
     <string name="route_btn_pause">暂停</string>
     <string name="route_btn_resume">继续</string>
+    <string name="route_btn_start">开始模拟</string>
+    <string name="route_btn_stop">停止模拟</string>
     <string name="route_error_point">请至少添加两个途经点</string>
     <string name="route_error_save">保存路线失败</string>
     <string name="route_error_delete">删除路线失败</string>

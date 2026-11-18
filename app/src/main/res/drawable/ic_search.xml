@@ -1,9 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Material Symbols Rounded "search" (Apache License 2.0), fetched from fonts.gstatic.com -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="22dp"
-    android:height="22dp"
-    android:viewportWidth="1024"
-    android:viewportHeight="1024">
-  <path
-      android:fillColor="#FFFFFFFF"
-      android:pathData="M938.2,832.6L723.8,618.1c-2.5,-2.5 -5.3,-4.4 -7.9,-6.4 36.2,-55.6 57.3,-121.8 57.3,-193.1C773.3,222.8 614.6,64 418.7,64S64,222.8 64,418.6c0,195.9 158.8,354.6 354.6,354.6 71.3,0 137.5,-21.2 193.2,-57.4 2,2.7 3.9,5.4 6.3,7.8L832.5,938c14.6,14.6 33.7,21.9 52.8,21.9 19.1,0 38.2,-7.3 52.8,-21.8 29.2,-29.1 29.2,-76.4 0.1,-105.5M418.7,661.3C284.9,661.3 176,552.4 176,418.6 176,284.9 284.9,176 418.7,176c133.8,0 242.6,108.9 242.6,242.7 0,133.7 -108.9,242.6 -242.6,242.6"/>
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="960"
+    android:viewportHeight="960">
+    <group android:translateY="960">
+        <path android:fillColor="#FF000000" android:pathData="M380-320q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l224 224q11 11 11 28t-11 28q-11 11-28 11t-28-11L532-372q-30 24-69 38t-83 14Zm0-80q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/>
+    </group>
 </vector>

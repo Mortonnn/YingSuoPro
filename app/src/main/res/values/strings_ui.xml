@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 全局 UI 文案（Material 3 Expressive 重构新增） -->
+    <string name="app_toolbar_subtitle">路线模拟 · 位置工具</string>
+    <string name="main_search_hint">搜索地点或坐标</string>
+    <string name="map_type_label">地图类型</string>
+    <string name="tab_position_mock">位置模拟</string>
+    <string name="tab_route_mock">路线模拟</string>
+    <string name="setting_map_style">地图样式</string>
+    <string name="setting_group_map">地图</string>
+    <string name="map_style_normal">普通地图</string>
+    <string name="map_style_satellite">卫星地图</string>
+    <string name="fab_start_mock">开始模拟</string>
+    <string name="fab_stop_mock">停止模拟</string>
+    <string name="fab_update_mock">传送至新位置</string>
+    <string name="common_more">更多</string>
+    <string name="common_close">关闭</string>
+    <string name="common_back">返回</string>
+    <string name="common_confirm">确定</string>
+    <string name="common_cancel">取消</string>
+
+    <!-- 首页 -->
+    <string name="home_tip_gesture">点击地图选点 · 长按查看地址</string>
+
+    <!-- 路线页 -->
+    <string name="route_toolbar_subtitle">拖动地图，对准点</string>
+    <string name="route_search_hint">搜索地点</string>
+    <string name="route_history_empty_title">暂无历史路线</string>
+    <string name="route_history_empty_body">保存后的路线会显示在这里</string>
+    <string name="route_metric_points_label">途经点</string>
+    <string name="route_metric_length_label">总长度</string>
+    <string name="route_metric_speed_label">速度</string>
+    <string name="route_speed_dialog_subtitle">沿路线按设定速度与刷新频率移动</string>
+    <string name="route_speed_field_speed">速度</string>
+    <string name="route_speed_field_float">浮动</string>
+    <string name="route_speed_field_interval">刷新间隔</string>
+    <string name="route_speed_field_loop">循环次数</string>
+    <string name="route_speed_field_altitude">海拔</string>
+    <string name="route_speed_unit_mps">米/秒</string>
+    <string name="route_speed_unit_percent">%</string>
+    <string name="route_speed_unit_ms">毫秒</string>
+    <string name="route_speed_unit_times">次</string>
+    <string name="route_speed_unit_m">米</string>
+
+    <!-- 历史页 -->
+    <string name="history_empty_title">暂无历史记录</string>
+    <string name="history_empty_body">保存过的位置会出现在这里</string>
+    <string name="history_search_hint">搜索历史位置</string>
+
+    <!-- 设置页 -->
+    <string name="settings_toolbar_subtitle">移动、路线与记录</string>
+
+    <!-- 欢迎页 -->
+    <string name="welcome_badge">MATERIAL 3 · 路线模拟</string>
+    <string name="welcome_feature_route_title">路线模拟</string>
+    <string name="welcome_feature_route_body">在地图上规划路线，按设定速度自动巡航</string>
+    <string name="welcome_feature_teleport_title">位置传送</string>
+    <string name="welcome_feature_teleport_body">输入坐标或长按地图，一键传送模拟位置</string>
+    <string name="welcome_feature_history_title">随手保存</string>
+    <string name="welcome_feature_history_body">常用位置与路线保存在本地，随时载入</string>
+    <string name="welcome_version_format">版本 %1$s</string>
+    <string name="welcome_permission_note">需要定位与悬浮窗权限才能运行</string>
+
+    <!-- 摇杆浮窗 -->
+    <string name="joystick_map_title">选择位置</string>
+    <string name="joystick_history_title">历史位置</string>
+    <string name="joystick_confirm_position">定位到这里</string>
+</resources>

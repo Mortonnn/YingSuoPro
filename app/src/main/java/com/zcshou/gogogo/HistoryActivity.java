@@ -5,9 +5,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.preference.PreferenceManager;
+
+import com.google.android.material.appbar.MaterialToolbar;
 
 import android.text.InputType;
 import android.text.TextUtils;
@@ -35,6 +36,7 @@ import java.util.Map;
 
 import com.zcshou.database.DataBaseHistoryLocation;
 import com.zcshou.utils.GoUtils;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 public class HistoryActivity extends BaseActivity {
     public static final String KEY_ID = "KEY_ID";
@@ -44,7 +46,7 @@ public class HistoryActivity extends BaseActivity {
     public static final String KEY_LNG_LAT_CUSTOM = "KEY_LNG_LAT_CUSTOM";
 
     private ListView mRecordListView;
-    private TextView noRecordText;
+    private View noRecordText;
     private LinearLayout mSearchLayout;
     private SQLiteDatabase mHistoryLocationDB;
     private List<Map<String, Object>> mAllRecord;
@@ -61,10 +63,10 @@ public class HistoryActivity extends BaseActivity {
          * */
         setContentView(R.layout.activity_history);
 
-        ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null) {
-            actionBar.setTitle(R.string.app_history);
-            actionBar.setDisplayHomeAsUpEnabled(true);
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            toolbar.setNavigationOnClickListener(v -> finish());
         }
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -97,9 +99,9 @@ public class HistoryActivity extends BaseActivity {
             this.finish(); // back button
             return true;
         } else if (id ==  R.id.action_delete) {
-            new AlertDialog.Builder(HistoryActivity.this)
-                    .setTitle("警告")//这里是表头的内容
-                    .setMessage("确定要删除全部历史记录吗?")//这里是中间显示的具体信息
+            new MaterialAlertDialogBuilder(HistoryActivity.this)
+                    .setTitle("删除全部历史记录")//这里是表头的内容
+                    .setMessage("确定要删除全部历史记录吗？")//这里是中间显示的具体信息
                     .setPositiveButton("确定",
                             (dialog, which) -> {
                                 if (deleteRecord(-1)) {
@@ -158,8 +160,8 @@ public class HistoryActivity extends BaseActivity {
                 item.put(KEY_ID, Integer.toString(ID));
                 item.put(KEY_LOCATION, Location);
                 item.put(KEY_TIME, GoUtils.timeStamp2Date(Long.toString(TimeStamp)));
-                item.put(KEY_LNG_LAT_WGS, "[经度:" + doubleLongitude + " 纬度:" + doubleLatitude + "]");
-                item.put(KEY_LNG_LAT_CUSTOM, "[经度:" + doubleBDLongitude + " 纬度:" + doubleBDLatitude + "]");
+                item.put(KEY_LNG_LAT_WGS, String.format(Locale.US, "%.5f, %.5f", doubleLongitude, doubleLatitude));
+                item.put(KEY_LNG_LAT_CUSTOM, String.format(Locale.US, "%.5f, %.5f", doubleBDLongitude, doubleBDLatitude));
                 data.add(item);
             }
             cursor.close();
@@ -261,9 +263,9 @@ public class HistoryActivity extends BaseActivity {
     }
 
     private void showDeleteDialog(String locID) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("警告");
-        builder.setMessage("确定要删除该项历史记录吗?");
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
+        builder.setTitle("删除该记录");
+        builder.setMessage("确定要删除该项历史记录吗？");
         builder.setPositiveButton("确定", (dialog, whichButton) -> {
             boolean deleteRet = deleteRecord(Integer.parseInt(locID));
             if (deleteRet) {
@@ -281,8 +283,8 @@ public class HistoryActivity extends BaseActivity {
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         input.setText(name);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("名称");
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
+        builder.setTitle("重命名位置");
         builder.setView(input);
         builder.setPositiveButton("确认", (dialog, whichButton) -> {
             String userInput = input.getText().toString();

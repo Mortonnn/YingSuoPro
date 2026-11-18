@@ -1,3 +1,11 @@
-<vector android:height="21.333334dp" android:viewportHeight="1024" android:viewportWidth="1152" android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
-  <path android:fillColor="#FF000000" android:pathData="M0,1024 L0,896 1152,896 1152,1024 0,1024ZM0,0 L1152,0 1152,832 0,832 0,0ZM1024,704 L1024,128 135.55,128 128,704 1024,704ZM248.26,402.75 L384,267.01 429.25,312.26 293.5,448 429.25,583.74 384,628.99 248.26,493.25 248.26,493.25 203.01,448 248.26,402.75 248.26,402.75ZM680.58,180.16 L532.67,670.34 471.36,651.84 619.33,161.66 680.58,180.16ZM755.65,257.02 L908.1,400.26 908.1,400.26 958.91,448 908.1,495.74 908.1,495.74 755.65,638.98 704.83,591.23 857.28,448 704.83,304.77 755.65,257.02Z" />
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Material Symbols Rounded "developer_mode" (Apache License 2.0), fetched from fonts.gstatic.com -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="960"
+    android:viewportHeight="960">
+    <group android:translateY="960">
+        <path android:fillColor="#FF000000" android:pathData="M280-120v-720 720Zm228.5-611.5Q520-743 520-760t-11.5-28.5Q497-800 480-800t-28.5 11.5Q440-777 440-760t11.5 28.5Q463-720 480-720t28.5-11.5ZM280-40q-33 0-56.5-23.5T200-120v-720q0-33 23.5-56.5T280-920h400q33 0 56.5 23.5T760-840v124q18 7 29 22t11 34v80q0 19-11 34t-29 22v44q0 17-11.5 28.5T720-440q-17 0-28.5-11.5T680-480v-360H280v720h40q17 0 28.5 11.5T360-80q0 17-11.5 28.5T320-40h-40Zm273-160 59 59q11 11 11 27.5T612-85q-12 12-28.5 12T555-85l-87-87q-12-12-12-28t12-28l88-88q12-12 28-11.5t28 12.5q11 12 11.5 28T612-259l-59 59Zm254 0-59-59q-11-11-11-27.5t11-28.5q12-12 28.5-12t28.5 12l87 87q12 12 12 28t-12 28l-88 88q-12 12-28 11.5T748-85q-11-12-11.5-28t11.5-28l59-59Z"/>
+    </group>
 </vector>

@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.PixelFormat;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -32,6 +34,8 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.search.core.SearchResult;
+import com.baidu.mapapi.search.sug.SuggestionResult;
 import com.baidu.mapapi.search.sug.SuggestionSearch;
 import com.baidu.mapapi.search.sug.SuggestionSearchOption;
 import com.zcshou.database.DataBaseHistoryLocation;
@@ -40,6 +44,7 @@ import com.zcshou.gogogo.MainActivity;
 import com.zcshou.gogogo.R;
 import com.zcshou.utils.GoUtils;
 import com.zcshou.utils.MapUtils;
+import com.zcshou.utils.PlaceSearchHelper;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -92,6 +97,10 @@ public class JoyStick extends View {
     private SuggestionSearch mSuggestionSearch;
     private ListView mSearchList;
     private LinearLayout mSearchLayout;
+    private final Handler mSearchHandler = new Handler(Looper.getMainLooper());
+    private Runnable mSearchRunnable;
+    private Runnable mBaiduTimeoutRunnable;
+    private String mPendingSearchKeyword = null;
 
     public JoyStick(Context context) {
         super(context);
@@ -190,6 +199,12 @@ public class JoyStick extends View {
                 if (mHistoryLayout.getParent() != null) {
                     mWindowManager.removeView(mHistoryLayout);
                 }
+                if (isJoystickDisabled()) {
+                    if (mJoystickLayout.getParent() != null) {
+                        mWindowManager.removeViewImmediate(mJoystickLayout);
+                    }
+                    break;
+                }
                 if (mJoystickLayout.getParent() == null) {
                     mWindowManager.addView(mJoystickLayout, mWindowParamCurrent);
                 }
@@ -212,6 +227,7 @@ public class JoyStick extends View {
     }
 
     public void destroy() {
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(mPrefListener);
         if (mMapLayout.getParent() != null) {
             mWindowManager.removeViewImmediate(mMapLayout);
         }
@@ -301,9 +317,9 @@ public class JoyStick extends View {
             if (!isWalk) {
                 btnWalk.setColorFilter(getResources().getColor(R.color.colorAccent, mContext.getTheme()));
                 isWalk = true;
-                btnRun.setColorFilter(getResources().getColor(R.color.black, mContext.getTheme()));
+                btnRun.setColorFilter(getResources().getColor(R.color.muted, mContext.getTheme()));
                 isRun = false;
-                btnBike.setColorFilter(getResources().getColor(R.color.black, mContext.getTheme()));
+                btnBike.setColorFilter(getResources().getColor(R.color.muted, mContext.getTheme()));
                 isBike = false;
                 try {
                     mSpeed = Double.parseDouble(sharedPreferences.getString("setting_walk", getResources().getString(R.string.setting_walk_default)));
@@ -322,9 +338,9 @@ public class JoyStick extends View {
             if (!isRun) {
                 btnRun.setColorFilter(getResources().getColor(R.color.colorAccent, mContext.getTheme()));
                 isRun = true;
-                btnWalk.setColorFilter(getResources().getColor(R.color.black, mContext.getTheme()));
+                btnWalk.setColorFilter(getResources().getColor(R.color.muted, mContext.getTheme()));
                 isWalk = false;
-                btnBike.setColorFilter(getResources().getColor(R.color.black, mContext.getTheme()));
+                btnBike.setColorFilter(getResources().getColor(R.color.muted, mContext.getTheme()));
                 isBike = false;
                 try {
                     mSpeed = Double.parseDouble(sharedPreferences.getString("setting_run", getResources().getString(R.string.setting_run_default)));
@@ -340,9 +356,9 @@ public class JoyStick extends View {
             if (!isBike) {
                 btnBike.setColorFilter(getResources().getColor(R.color.colorAccent, mContext.getTheme()));
                 isBike = true;
-                btnWalk.setColorFilter(getResources().getColor(R.color.black, mContext.getTheme()));
+                btnWalk.setColorFilter(getResources().getColor(R.color.muted, mContext.getTheme()));
                 isWalk = false;
-                btnRun.setColorFilter(getResources().getColor(R.color.black, mContext.getTheme()));
+                btnRun.setColorFilter(getResources().getColor(R.color.muted, mContext.getTheme()));
                 isRun = false;
                 try {
                     mSpeed = Double.parseDouble(sharedPreferences.getString("setting_bike", getResources().getString(R.string.setting_bike_default)));
@@ -359,15 +375,49 @@ public class JoyStick extends View {
         ButtonView btnView = mJoystickLayout.findViewById(R.id.joystick_button);
         btnView.setListener(this::processDirection);
 
-        /* 这里用来决定摇杆类型 */
-        if (sharedPreferences.getString("setting_joystick_type", "0").equals("0")) {
+        /* 这里用来决定摇杆类型：0 圆形、1 按键、2 关闭 */
+        updateJoystickTypeVisibility();
+
+        sharedPreferences.registerOnSharedPreferenceChangeListener(mPrefListener);
+    }
+
+    private boolean isJoystickDisabled() {
+        return "2".equals(sharedPreferences.getString("setting_joystick_type", "0"));
+    }
+
+    private void updateJoystickTypeVisibility() {
+        if (mJoystickLayout == null) {
+            return;
+        }
+        RockerView rckView = mJoystickLayout.findViewById(R.id.joystick_rocker);
+        ButtonView btnView = mJoystickLayout.findViewById(R.id.joystick_button);
+        String type = sharedPreferences.getString("setting_joystick_type", "0");
+        if ("0".equals(type)) {
             rckView.setVisibility(VISIBLE);
             btnView.setVisibility(GONE);
-        } else {
+        } else if ("1".equals(type)) {
             rckView.setVisibility(GONE);
             btnView.setVisibility(VISIBLE);
+        } else {
+            rckView.setVisibility(GONE);
+            btnView.setVisibility(GONE);
         }
     }
+
+    private final SharedPreferences.OnSharedPreferenceChangeListener mPrefListener =
+            (prefs, key) -> {
+                if (!"setting_joystick_type".equals(key)) {
+                    return;
+                }
+                updateJoystickTypeVisibility();
+                if (isJoystickDisabled()) {
+                    if (mJoystickLayout.getParent() != null) {
+                        mWindowManager.removeViewImmediate(mJoystickLayout);
+                    }
+                } else if (mCurWin == WINDOW_TYPE_JOYSTICK && mJoystickLayout.getParent() == null) {
+                    show();
+                }
+            };
 
     private void processDirection(boolean auto, double angle, double r) {
         if (r <= 0) {
@@ -440,33 +490,32 @@ public class JoyStick extends View {
         mSearchLayout = mMapLayout.findViewById(R.id.map_search_linear);
         mSuggestionSearch = SuggestionSearch.newInstance();
         mSuggestionSearch.setOnGetSuggestionResultListener(suggestionResult -> {
-            if (suggestionResult == null || suggestionResult.getAllSuggestions() == null) {
-                GoUtils.DisplayToast(mContext,getResources().getString(R.string.app_search_null));
-            } else {
-                List<Map<String, Object>> data = new ArrayList<>();
-                int retCnt = suggestionResult.getAllSuggestions().size();
+            if (mBaiduTimeoutRunnable != null) {
+                mSearchHandler.removeCallbacks(mBaiduTimeoutRunnable);
+                mBaiduTimeoutRunnable = null;
+            }
 
-                for (int i = 0; i < retCnt; i++) {
-                    if (suggestionResult.getAllSuggestions().get(i).pt == null) {
-                        continue;
-                    }
-
-                    Map<String, Object> poiItem = new HashMap<>();
-                    poiItem.put(MainActivity.POI_NAME, suggestionResult.getAllSuggestions().get(i).key);
-                    poiItem.put(MainActivity.POI_ADDRESS, suggestionResult.getAllSuggestions().get(i).city + " " + suggestionResult.getAllSuggestions().get(i).district);
-                    poiItem.put(MainActivity.POI_LONGITUDE, "" + suggestionResult.getAllSuggestions().get(i).pt.longitude);
-                    poiItem.put(MainActivity.POI_LATITUDE, "" + suggestionResult.getAllSuggestions().get(i).pt.latitude);
-                    data.add(poiItem);
+            if (suggestionResult != null
+                    && suggestionResult.error == SearchResult.ERRORNO.NO_ERROR
+                    && suggestionResult.getAllSuggestions() != null) {
+                List<Map<String, Object>> data = getMapList(suggestionResult);
+                if (!data.isEmpty()) {
+                    showSearchResults(data);
+                    return;
                 }
+            }
 
-                SimpleAdapter simAdapt = new SimpleAdapter(
-                        mContext,
-                        data,
-                        R.layout.search_poi_item,
-                        new String[] {MainActivity.POI_NAME, MainActivity.POI_ADDRESS, MainActivity.POI_LONGITUDE, MainActivity.POI_LATITUDE}, // 与下面数组元素要一一对应
-                        new int[] {R.id.poi_name, R.id.poi_address, R.id.poi_longitude, R.id.poi_latitude});
-                mSearchList.setAdapter(simAdapt);
-                mSearchLayout.setVisibility(View.VISIBLE);
+            if (suggestionResult != null && suggestionResult.error != null) {
+                if (suggestionResult.error == SearchResult.ERRORNO.KEY_ERROR
+                        || suggestionResult.error == SearchResult.ERRORNO.PERMISSION_UNFINISHED
+                        || suggestionResult.error == SearchResult.ERRORNO.NO_ADVANCED_PERMISSION
+                        || suggestionResult.error == SearchResult.ERRORNO.REQUEST_ERROR) {
+                    PlaceSearchHelper.markBaiduUnavailable();
+                }
+            }
+
+            if (mPendingSearchKeyword != null) {
+                searchWithFallback(mPendingSearchKeyword);
             }
         });
         mSearchList.setOnItemClickListener((parent, view, position, id) -> {
@@ -501,22 +550,19 @@ public class JoyStick extends View {
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                return false;
+                if (query != null && !query.trim().isEmpty()) {
+                    cancelScheduledSearch();
+                    performSearch(query.trim());
+                }
+                return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (newText != null && newText.length() > 0) {
-                    try {
-                        mSuggestionSearch.requestSuggestion((new SuggestionSearchOption())
-                                .keyword(newText)
-                                .city(MainActivity.mCurrentCity)
-                        );
-                    } catch (Exception e) {
-                        GoUtils.DisplayToast(mContext,getResources().getString(R.string.app_error_search));
-                        e.printStackTrace();
-                    }
+                if (newText != null && !newText.trim().isEmpty()) {
+                    scheduleSearch(newText.trim());
                 } else {
+                    cancelScheduledSearch();
                     mSearchLayout.setVisibility(GONE);
                 }
 
@@ -575,6 +621,121 @@ public class JoyStick extends View {
         btnBack.setColorFilter(getResources().getColor(R.color.colorAccent, mContext.getTheme()));
 
         initBaiduMap();
+    }
+
+    /* 输入停止 350ms 后再发起搜索，避免每敲一个字都请求一次网络 */
+    private void scheduleSearch(final String keyword) {
+        cancelScheduledSearch();
+        mPendingSearchKeyword = keyword;
+        if (mBaiduTimeoutRunnable != null) {
+            mSearchHandler.removeCallbacks(mBaiduTimeoutRunnable);
+            mBaiduTimeoutRunnable = null;
+        }
+        mSearchRunnable = () -> performSearch(keyword);
+        mSearchHandler.postDelayed(mSearchRunnable, 350);
+    }
+
+    private void cancelScheduledSearch() {
+        if (mSearchRunnable != null) {
+            mSearchHandler.removeCallbacks(mSearchRunnable);
+            mSearchRunnable = null;
+        }
+    }
+
+    /* 优先使用百度地点建议；百度 AK 不可用或超时时自动切换到开源 OSM 搜索 */
+    private void performSearch(final String keyword) {
+        mPendingSearchKeyword = keyword;
+
+        if (mBaiduTimeoutRunnable != null) {
+            mSearchHandler.removeCallbacks(mBaiduTimeoutRunnable);
+            mBaiduTimeoutRunnable = null;
+        }
+
+        if (PlaceSearchHelper.isBaiduAvailable()) {
+            try {
+                String city = TextUtils.isEmpty(MainActivity.mCurrentCity) ? "全国" : MainActivity.mCurrentCity;
+                mSuggestionSearch.requestSuggestion(new SuggestionSearchOption()
+                        .keyword(keyword)
+                        .city(city));
+
+                mBaiduTimeoutRunnable = () -> {
+                    if (keyword.equals(mPendingSearchKeyword)) {
+                        PlaceSearchHelper.markBaiduUnavailable();
+                        searchWithFallback(keyword);
+                    }
+                };
+                mSearchHandler.postDelayed(mBaiduTimeoutRunnable, 1800);
+                return;
+            } catch (Exception e) {
+                PlaceSearchHelper.markBaiduUnavailable();
+            }
+        }
+
+        searchWithFallback(keyword);
+    }
+
+    private void searchWithFallback(final String keyword) {
+        PlaceSearchHelper.searchOsm(mContext, keyword, items -> {
+            if (!keyword.equals(mPendingSearchKeyword)) {
+                return;
+            }
+            if (items.isEmpty()) {
+                mSearchLayout.setVisibility(GONE);
+                GoUtils.DisplayToast(mContext, getResources().getString(R.string.app_search_null));
+                return;
+            }
+
+            List<Map<String, Object>> data = new ArrayList<>();
+            for (PlaceSearchHelper.Poi poi : items) {
+                Map<String, Object> poiItem = new HashMap<>();
+                poiItem.put(MainActivity.POI_NAME, poi.name);
+                poiItem.put(MainActivity.POI_ADDRESS, poi.address);
+                poiItem.put(MainActivity.POI_LONGITUDE, String.valueOf(poi.longitude));
+                poiItem.put(MainActivity.POI_LATITUDE, String.valueOf(poi.latitude));
+                data.add(poiItem);
+            }
+            showSearchResults(data);
+        });
+    }
+
+    private void showSearchResults(List<Map<String, Object>> data) {
+        if (mSearchList == null || data == null || data.isEmpty()) {
+            return;
+        }
+        SimpleAdapter simAdapt = new SimpleAdapter(
+                mContext,
+                data,
+                R.layout.search_poi_item,
+                new String[] {MainActivity.POI_NAME, MainActivity.POI_ADDRESS, MainActivity.POI_LONGITUDE, MainActivity.POI_LATITUDE},
+                new int[] {R.id.poi_name, R.id.poi_address, R.id.poi_longitude, R.id.poi_latitude});
+        mSearchList.setAdapter(simAdapt);
+        mSearchLayout.setVisibility(View.VISIBLE);
+    }
+
+    private static List<Map<String, Object>> getMapList(SuggestionResult suggestionResult) {
+        List<Map<String, Object>> data = new ArrayList<>();
+        if (suggestionResult == null || suggestionResult.getAllSuggestions() == null) {
+            return data;
+        }
+        int retCnt = suggestionResult.getAllSuggestions().size();
+
+        for (int i = 0; i < retCnt; i++) {
+            SuggestionResult.SuggestionInfo info = suggestionResult.getAllSuggestions().get(i);
+            if (info == null || info.pt == null || TextUtils.isEmpty(info.key)) {
+                continue;
+            }
+
+            String city = info.city == null ? "" : info.city;
+            String district = info.district == null ? "" : info.district;
+
+            Map<String, Object> poiItem = new HashMap<>();
+            poiItem.put(MainActivity.POI_NAME, info.key);
+            poiItem.put(MainActivity.POI_ADDRESS, (city + " " + district).trim());
+            poiItem.put(MainActivity.POI_LONGITUDE, "" + info.pt.longitude);
+            poiItem.put(MainActivity.POI_LATITUDE, "" + info.pt.latitude);
+            data.add(poiItem);
+        }
+        return data;
     }
 
     private void initBaiduMap() {
@@ -644,7 +805,7 @@ public class JoyStick extends View {
     private void markBaiduMap(LatLng latLng) {
         mMarkMapLngLat = latLng;
 
-        MarkerOptions ooA = new MarkerOptions().position(latLng).icon(MainActivity.mMapIndicator);
+        MarkerOptions ooA = new MarkerOptions().position(latLng).icon(MainActivity.mMapIndicator).anchor(0.5f, 0.5f);
         mBaiduMap.clear();
         mBaiduMap.addOverlay(ooA);
 

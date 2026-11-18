@@ -1,4 +1,11 @@
-<vector android:height="40dp" android:viewportHeight="1024"
-    android:viewportWidth="1024" android:width="40dp" xmlns:android="http://schemas.android.com/apk/res/android">
-    <path android:fillColor="#FF000000" android:pathData="M 191 312 L 517.19 504.12 L 837 312.05 L 514.64 870.19 Z"/>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Material Symbols Rounded "keyboard_arrow_down" (Apache License 2.0), fetched from fonts.gstatic.com -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="960"
+    android:viewportHeight="960">
+    <group android:translateY="960">
+        <path android:fillColor="#FF000000" android:pathData="M465-363.5q-7-2.5-13-8.5L268-556q-11-11-11-28t11-28q11-11 28-11t28 11l156 156 156-156q11-11 28-11t28 11q11 11 11 28t-11 28L508-372q-6 6-13 8.5t-15 2.5q-8 0-15-2.5Z"/>
+    </group>
 </vector>

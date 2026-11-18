@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 设置页 -->
+    <string name="pages_settings_subtitle">移动、路线与记录</string>
+
+    <!-- 历史页 -->
+    <string name="pages_history_subtitle">本地保存的位置记录</string>
+    <string name="pages_history_empty_title">暂无历史记录</string>
+    <string name="pages_history_empty_body">保存过的位置会出现在这里，点击地图选点即可保存</string>
+    <string name="pages_history_delete_title">删除全部历史记录</string>
+
+    <!-- 欢迎页 -->
+    <string name="pages_welcome_badge">MATERIAL 3 · 路线模拟</string>
+    <string name="pages_welcome_features_title">主要功能</string>
+    <string name="pages_welcome_feature_route_title">路线模拟</string>
+    <string name="pages_welcome_feature_route_body">在地图上规划路线，按设定速度自动巡航</string>
+    <string name="pages_welcome_feature_teleport_title">位置传送</string>
+    <string name="pages_welcome_feature_teleport_body">输入坐标或长按地图，一键传送模拟位置</string>
+    <string name="pages_welcome_feature_save_title">随手保存</string>
+    <string name="pages_welcome_feature_save_body">常用位置与路线保存在本地，随时载入</string>
+    <string name="pages_welcome_version_format">版本 %1$s</string>
+
+    <!-- 更新弹窗 -->
+    <string name="pages_update_notes">更新内容</string>
+</resources>

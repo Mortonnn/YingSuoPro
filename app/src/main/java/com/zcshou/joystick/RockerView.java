@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -21,6 +23,7 @@ import com.zcshou.gogogo.R;
 
 public class RockerView extends View {
     private Paint outerCirclePaint;
+    private Paint outerRingPaint;
     private Paint innerCirclePaint;
     private Paint innerIconPaint;
     /** 内圆中心x坐标 */
@@ -60,19 +63,28 @@ public class RockerView extends View {
 
     private void init() {
         outerCirclePaint = new Paint();
-        outerCirclePaint.setColor(ContextCompat.getColor(mContext, R.color.grey));
-        outerCirclePaint.setAlpha(180);
+        outerCirclePaint.setColor(ContextCompat.getColor(mContext, R.color.surface_container_lowest));
+        outerCirclePaint.setAlpha(255);
         outerCirclePaint.setAntiAlias(true);
 
+        outerRingPaint = new Paint();
+        outerRingPaint.setColor(ContextCompat.getColor(mContext, R.color.outline_variant));
+        outerRingPaint.setStyle(Paint.Style.STROKE);
+        outerRingPaint.setStrokeWidth(1f * mContext.getResources().getDisplayMetrics().density);
+        outerRingPaint.setAntiAlias(true);
+
         innerCirclePaint = new Paint();
-        innerCirclePaint.setColor(ContextCompat.getColor(mContext, R.color.lightgrey));
-        innerCirclePaint.setAlpha(180);
+        innerCirclePaint.setColor(ContextCompat.getColor(mContext, R.color.primary_container));
+        innerCirclePaint.setAlpha(255);
         innerCirclePaint.setAntiAlias(true);
 
         innerIconPaint = new Paint();
-        innerIconPaint.setAlpha(200);
+        innerIconPaint.setAlpha(255);
         innerIconPaint.setAntiAlias(true);
         innerIconPaint.setFilterBitmap(true);
+        innerIconPaint.setColorFilter(new PorterDuffColorFilter(
+                ContextCompat.getColor(mContext, R.color.on_primary_container),
+                PorterDuff.Mode.SRC_IN));
 
         isAuto = true;
         mRockerBitmap = scaleBitmap(getBitmap(getContext(), R.drawable.ic_lock_close));
@@ -92,7 +104,7 @@ public class RockerView extends View {
             viewCenterX = (float)size / 2;
             viewCenterY = (float)size / 2;
             outerCircleRadius = size / 2;
-            innerCircleRadius = size / 5;
+            innerCircleRadius = size / 4;
             dstRect = new Rect(
                     (int) (innerCenterX - mRockerBitmap.getWidth()),
                     (int) (innerCenterY - mRockerBitmap.getHeight()),
@@ -106,6 +118,7 @@ public class RockerView extends View {
         super.onDraw(canvas);
 
         canvas.drawCircle(viewCenterX, viewCenterY, outerCircleRadius, outerCirclePaint);
+        canvas.drawCircle(viewCenterX, viewCenterY, outerCircleRadius - 0.5f * mContext.getResources().getDisplayMetrics().density, outerRingPaint);
         /* 摇杆的控制部分由两部分组成 */
         canvas.drawCircle(innerCenterX, innerCenterY, innerCircleRadius, innerCirclePaint);
         canvas.drawBitmap(mRockerBitmap, srcRect, dstRect, innerIconPaint);
@@ -203,7 +216,7 @@ public class RockerView extends View {
 
     private Bitmap scaleBitmap(Bitmap bitmap) {
         Matrix mMatrix = new Matrix();
-        mMatrix.postScale(0.45f,0.45f);
+        mMatrix.postScale(0.6f,0.6f);
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), mMatrix,true);
     }
 

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 路线模拟页专用文案（仅本页使用；公共文案见 strings_ui.xml） -->
+    <string name="route_action_undo">撤销</string>
+    <string name="route_action_clear">清空</string>
+    <string name="route_action_save">保存</string>
+    <string name="route_action_history">历史</string>
+    <string name="route_action_add">添加</string>
+</resources>
