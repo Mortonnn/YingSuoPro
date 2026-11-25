@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    输入坐标对话框：两个 FilledBox 字段 + 胶囊分段坐标系。
-    保留 pos_type_bd 的 RadioButton 类型与 id（MainActivity 依赖 isChecked()），
-    因此不使用 MaterialButtonToggleGroup，只做 M3 分段外观。
+    输入坐标对话框：两个 FilledBox 字段 + Liquid Glass 坐标系切换。
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -54,44 +52,12 @@
             android:textSize="@dimen/text_body" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- 坐标系：胶囊分段，保留 RadioGroup/RadioButton 结构 -->
-    <RadioGroup
-        android:id="@+id/RadioGroupMapType"
+    <!-- 坐标系：局部 Liquid Glass 分段切换（百度坐标 / GPS 坐标） -->
+    <com.github.yingsuopro.ui.LiquidGlassSegmentedControl
+        android:id="@+id/pos_type_switch"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/bg_segmented"
-        android:orientation="horizontal"
-        android:padding="4dp">
-
-        <RadioButton
-            android:id="@+id/pos_type_bd"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:background="@drawable/bg_segment_selected"
-            android:backgroundTint="@color/segment_bg_tint"
-            android:button="@null"
-            android:checked="true"
-            android:fontFamily="sans-serif-medium"
-            android:gravity="center"
-            android:text="@string/input_position_baidu"
-            android:textColor="@color/segment_text_tint"
-            android:textSize="@dimen/text_label" />
-
-        <RadioButton
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:background="@drawable/bg_segment_selected"
-            android:backgroundTint="@color/segment_bg_tint"
-            android:button="@null"
-            android:fontFamily="sans-serif-medium"
-            android:gravity="center"
-            android:text="@string/input_position_gps"
-            android:textColor="@color/segment_text_tint"
-            android:textSize="@dimen/text_label" />
-    </RadioGroup>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp" />
 
     <LinearLayout
         android:layout_width="match_parent"

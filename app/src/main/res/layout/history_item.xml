@@ -21,7 +21,7 @@
             android:contentDescription="@null"
             android:importantForAccessibility="no"
             android:src="@drawable/ic_location_on"
-            android:tint="@color/on_secondary_container" />
+            android:tint="?attr/colorOnSecondaryContainer" />
     </FrameLayout>
 
     <LinearLayout

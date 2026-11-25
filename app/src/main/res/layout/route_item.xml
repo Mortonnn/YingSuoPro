@@ -31,7 +31,7 @@
             android:layout_gravity="center"
             android:contentDescription="@null"
             app:srcCompat="@drawable/ic_route"
-            app:tint="@color/on_secondary_container" />
+            app:tint="?attr/colorOnSecondaryContainer" />
     </FrameLayout>
 
     <!-- name / distance / time 三级文字 -->

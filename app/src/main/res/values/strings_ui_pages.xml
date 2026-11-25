@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- 设置页 -->
-    <string name="pages_settings_subtitle">移动、路线与记录</string>
+    <string name="pages_settings_subtitle">外观、移动、路线与记录</string>
 
     <!-- 历史页 -->
     <string name="pages_history_subtitle">本地保存的位置记录</string>
@@ -19,7 +19,4 @@
     <string name="pages_welcome_feature_save_title">随手保存</string>
     <string name="pages_welcome_feature_save_body">常用位置与路线保存在本地，随时载入</string>
     <string name="pages_welcome_version_format">版本 %1$s</string>
-
-    <!-- 更新弹窗 -->
-    <string name="pages_update_notes">更新内容</string>
 </resources>

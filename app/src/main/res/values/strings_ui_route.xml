@@ -6,4 +6,11 @@
     <string name="route_action_save">保存</string>
     <string name="route_action_history">历史</string>
     <string name="route_action_add">添加</string>
+    <string name="route_point_too_close">这个位置离上一个途经点太近了，请换个位置</string>
+    <string name="route_service_connecting">服务正在连接，请稍后再试</string>
+    <string name="route_running_locked">路线运行中，暂不可编辑</string>
+    <string name="route_running_conflict">路线模拟正在运行，请先停止路线模拟</string>
+    <string name="route_clear_title">清空路线</string>
+    <string name="route_clear_message">确定要清空当前规划的路线吗？</string>
+    <string name="route_default_prefix">路线</string>
 </resources>

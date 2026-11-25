@@ -25,9 +25,9 @@
             android:contentDescription="@string/route_btn_add_point"
             android:translationY="-18dp"
             app:srcCompat="@drawable/ic_route_mark"
-            app:tint="@color/primary" />
+            app:tint="?attr/colorPrimary" />
 
-        <!-- 顶部悬浮顶栏：28dp 圆角、68dp 高，返回 + 标题 + 副标题 -->
+        <!-- 顶部悬浮顶栏：与位置模拟共用同一套尺寸和圆角，搜索入口在顶栏右侧 -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/route_top_card"
             style="@style/Widget.App.Card.Floating"
@@ -35,7 +35,7 @@
             android:layout_height="@dimen/top_bar_height"
             android:layout_alignParentTop="true"
             android:layout_marginStart="@dimen/top_bar_margin"
-            android:layout_marginTop="@dimen/top_bar_margin"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="@dimen/top_bar_margin"
             app:cardCornerRadius="@dimen/radius_xl">
 
@@ -45,32 +45,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:paddingStart="4dp"
-                app:navigationContentDescription="@string/common_back"
-                app:navigationIcon="@drawable/ic_arrow_back"
-                app:subtitle="@string/route_toolbar_subtitle"
+                android:paddingEnd="4dp"
+                app:subtitle="@string/app_name"
                 app:title="@string/route_title" />
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- 顶栏下方左侧：28dp 圆角搜索条，常驻展开 -->
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/route_search_view"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_below="@id/route_top_card"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="68dp"
-            android:background="@drawable/bg_search_bar"
-            android:elevation="2dp"
-            android:paddingStart="4dp"
-            android:paddingEnd="4dp"
-            app:closeIcon="@drawable/ic_close"
-            app:iconifiedByDefault="false"
-            app:queryBackground="@color/transparent"
-            app:queryHint="@string/route_search_hint"
-            app:searchIcon="@drawable/ic_search" />
-
-        <!-- 顶栏下方右侧：3 个 48dp 圆形地图按钮 -->
+        <!-- 顶栏下方右侧：3 个 48dp 圆形地图按钮（与位置模拟页共用 Widget.App.MapButton） -->
         <LinearLayout
             android:id="@+id/route_map_controls"
             android:layout_width="wrap_content"
@@ -81,64 +61,61 @@
             android:layout_marginEnd="12dp"
             android:orientation="vertical">
 
-            <ImageButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/route_cur_position"
+                style="@style/Widget.App.MapButton"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:background="@drawable/bg_map_button"
                 android:contentDescription="@string/cur_position"
-                android:elevation="2dp"
-                android:padding="12dp"
-                app:srcCompat="@drawable/ic_my_location"
-                app:tint="@color/primary" />
+                app:icon="@drawable/ic_my_location"
+                app:iconTint="?attr/colorPrimary" />
 
-            <ImageButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/route_zoom_in"
+                style="@style/Widget.App.MapButton"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_marginTop="8dp"
-                android:background="@drawable/bg_map_button"
                 android:contentDescription="@string/zoom_in"
-                android:elevation="2dp"
-                android:padding="12dp"
-                app:srcCompat="@drawable/ic_add"
-                app:tint="@color/primary" />
+                app:icon="@drawable/ic_add" />
 
-            <ImageButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/route_zoom_out"
+                style="@style/Widget.App.MapButton"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_marginTop="8dp"
-                android:background="@drawable/bg_map_button"
                 android:contentDescription="@string/zoom_out"
-                android:elevation="2dp"
-                android:padding="12dp"
-                app:srcCompat="@drawable/ic_remove"
-                app:tint="@color/primary" />
+                app:icon="@drawable/ic_remove" />
         </LinearLayout>
 
-        <!-- 搜索结果下拉面板：24dp 圆角卡片 -->
+        <!-- 搜索结果下拉面板：与顶栏等宽，24dp 圆角卡片 -->
         <LinearLayout
             android:id="@+id/route_search_linear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/route_search_view"
-            android:layout_marginStart="12dp"
+            android:layout_below="@id/route_top_card"
+            android:layout_marginStart="@dimen/top_bar_margin"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="68dp"
+            android:layout_marginEnd="@dimen/top_bar_margin"
             android:background="@drawable/bg_search_panel"
+            android:clipToOutline="true"
+            android:elevation="8dp"
             android:padding="6dp"
             android:visibility="gone">
 
             <ListView
                 android:id="@+id/route_search_list_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:divider="@null"
+                android:dividerHeight="0dp"
+                android:scrollbars="none" />
         </LinearLayout>
 
     </RelativeLayout>
 
-    <!-- Material BottomSheetBehavior：拖动由系统接管，展开时不会误拖地图 -->
+    <!-- 底部操作抽屉：折叠时只保留操作行，展开后显示统计与状态 -->
     <LinearLayout
         android:id="@+id/route_panel"
         android:layout_width="match_parent"
@@ -151,11 +128,12 @@
         app:behavior_draggable="true"
         app:behavior_fitToContents="true"
         app:behavior_hideable="false"
-        app:behavior_peekHeight="248dp"
+        app:behavior_peekHeight="112dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
+        <!-- 折叠态：拖动条 + 撤销 / 清空 / 保存 / 历史 / 添加 -->
         <LinearLayout
-            android:id="@+id/route_panel_collapsed"
+            android:id="@+id/route_panel_peek"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -163,7 +141,7 @@
             <LinearLayout
                 android:id="@+id/route_panel_handle"
                 android:layout_width="match_parent"
-                android:layout_height="28dp"
+                android:layout_height="24dp"
                 android:contentDescription="@string/route_history_title"
                 android:gravity="center"
                 android:orientation="vertical">
@@ -175,314 +153,298 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/route_controls"
+                android:id="@+id/route_actions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:orientation="horizontal"
                 android:paddingStart="@dimen/space_page"
                 android:paddingEnd="@dimen/space_page"
-                android:paddingBottom="16dp">
+                android:paddingBottom="10dp">
 
-                <!-- 统计区：3 列 metric，速度旁是 40dp 的调节按钮 -->
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_metric_tile"
-                    android:orientation="horizontal"
-                    android:padding="16dp">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/route_metric_points_label"
-                            android:textAppearance="@style/TextAppearance.App.Caption" />
-
-                        <TextView
-                            android:id="@+id/route_point_count"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:ellipsize="end"
-                            android:fontFeatureSettings="tnum"
-                            android:maxLines="1"
-                            android:textAppearance="@style/TextAppearance.App.Section" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/route_metric_length_label"
-                            android:textAppearance="@style/TextAppearance.App.Caption" />
-
-                        <TextView
-                            android:id="@+id/route_length"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:ellipsize="end"
-                            android:fontFeatureSettings="tnum"
-                            android:maxLines="1"
-                            android:textAppearance="@style/TextAppearance.App.Section" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/route_metric_speed_label"
-                            android:textAppearance="@style/TextAppearance.App.Caption" />
-
-                        <TextView
-                            android:id="@+id/route_speed_value"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:ellipsize="end"
-                            android:fontFeatureSettings="tnum"
-                            android:maxLines="1"
-                            android:textAppearance="@style/TextAppearance.App.Section" />
-                    </LinearLayout>
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
 
                     <ImageButton
-                        android:id="@+id/route_set_speed"
+                        android:id="@+id/route_undo"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:layout_gravity="bottom"
-                        android:layout_marginStart="4dp"
-                        android:background="@drawable/bg_action_circle"
-                        android:contentDescription="@string/route_speed_title"
+                        android:background="@drawable/bg_icon_circle"
+                        android:contentDescription="@string/route_btn_undo"
+                        android:foreground="?attr/selectableItemBackgroundBorderless"
                         android:padding="8dp"
-                        app:srcCompat="@drawable/ic_tune"
-                        app:tint="@color/primary" />
-                </LinearLayout>
-
-                <!-- 5 个带文字的操作按钮：40dp tonal 圆底 + 11sp 标签 -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center_horizontal"
-                        android:orientation="vertical">
-
-                        <ImageButton
-                            android:id="@+id/route_undo"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:background="@drawable/bg_icon_circle"
-                            android:contentDescription="@string/route_btn_undo"
-                            android:foreground="?attr/selectableItemBackgroundBorderless"
-                            android:padding="8dp"
-                            app:srcCompat="@drawable/ic_undo"
-                            app:tint="@color/on_secondary_container" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:fontFamily="sans-serif"
-                            android:maxLines="1"
-                            android:text="@string/route_action_undo"
-                            android:textColor="@color/on_surface_variant"
-                            android:textSize="11sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center_horizontal"
-                        android:orientation="vertical">
-
-                        <ImageButton
-                            android:id="@+id/route_clear"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:background="@drawable/bg_icon_circle"
-                            android:contentDescription="@string/route_btn_clear"
-                            android:foreground="?attr/selectableItemBackgroundBorderless"
-                            android:padding="8dp"
-                            app:srcCompat="@drawable/ic_delete"
-                            app:tint="@color/on_secondary_container" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:fontFamily="sans-serif"
-                            android:maxLines="1"
-                            android:text="@string/route_action_clear"
-                            android:textColor="@color/on_surface_variant"
-                            android:textSize="11sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center_horizontal"
-                        android:orientation="vertical">
-
-                        <ImageButton
-                            android:id="@+id/route_save"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:background="@drawable/bg_icon_circle"
-                            android:contentDescription="@string/route_btn_save"
-                            android:foreground="?attr/selectableItemBackgroundBorderless"
-                            android:padding="8dp"
-                            app:srcCompat="@drawable/ic_bookmark_add"
-                            app:tint="@color/on_secondary_container" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:fontFamily="sans-serif"
-                            android:maxLines="1"
-                            android:text="@string/route_action_save"
-                            android:textColor="@color/on_surface_variant"
-                            android:textSize="11sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center_horizontal"
-                        android:orientation="vertical">
-
-                        <ImageButton
-                            android:id="@+id/route_history"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:background="@drawable/bg_icon_circle"
-                            android:contentDescription="@string/route_btn_history"
-                            android:foreground="?attr/selectableItemBackgroundBorderless"
-                            android:padding="8dp"
-                            app:srcCompat="@drawable/ic_history"
-                            app:tint="@color/on_secondary_container" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:fontFamily="sans-serif"
-                            android:maxLines="1"
-                            android:text="@string/route_action_history"
-                            android:textColor="@color/on_surface_variant"
-                            android:textSize="11sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center_horizontal"
-                        android:orientation="vertical">
-
-                        <ImageButton
-                            android:id="@+id/route_add_point"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:background="@drawable/bg_icon_circle"
-                            android:contentDescription="@string/route_btn_add_point"
-                            android:foreground="?attr/selectableItemBackgroundBorderless"
-                            android:padding="8dp"
-                            app:srcCompat="@drawable/ic_add"
-                            app:tint="@color/on_secondary_container" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:fontFamily="sans-serif"
-                            android:maxLines="1"
-                            android:text="@string/route_action_add"
-                            android:textColor="@color/on_surface_variant"
-                            android:textSize="11sp" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <!-- 状态区：状态文案 + 暂停（48dp tonal）+ 开始（56dp 主色圆形） -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                        app:srcCompat="@drawable/ic_undo"
+                        app:tint="?attr/colorOnSecondaryContainer" />
 
                     <TextView
-                        android:id="@+id/route_status"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.App.Section" />
-
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-
-                    <ImageButton
-                        android:id="@+id/route_pause"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_marginEnd="12dp"
-                        android:background="@drawable/bg_icon_circle"
-                        android:contentDescription="@string/route_btn_pause"
-                        android:foreground="?attr/selectableItemBackgroundBorderless"
-                        android:padding="12dp"
-                        android:visibility="gone"
-                        app:srcCompat="@drawable/ic_route_pause"
-                        app:tint="@color/on_secondary_container" />
-
-                    <ImageButton
-                        android:id="@+id/route_start"
-                        android:layout_width="56dp"
-                        android:layout_height="56dp"
-                        android:background="@drawable/bg_route_start"
-                        android:contentDescription="@string/route_btn_start"
-                        android:elevation="2dp"
-                        android:padding="15dp"
-                        app:srcCompat="@drawable/ic_route_play"
-                        app:tint="@color/on_primary" />
+                        android:layout_marginTop="4dp"
+                        android:fontFamily="sans-serif"
+                        android:maxLines="1"
+                        android:text="@string/route_action_undo"
+                        android:textColor="@color/on_surface_variant"
+                        android:textSize="11sp" />
                 </LinearLayout>
 
-                <com.google.android.material.progressindicator.LinearProgressIndicator
-                    android:id="@+id/route_progress"
-                    android:layout_width="match_parent"
-                    android:layout_height="6dp"
-                    android:layout_marginTop="12dp"
-                    android:max="100"
-                    android:progress="0"
-                    app:indicatorColor="@color/primary"
-                    app:trackColor="@color/surface_container_highest"
-                    app:trackCornerRadius="3dp"
-                    app:trackThickness="6dp" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <ImageButton
+                        android:id="@+id/route_clear"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/bg_icon_circle"
+                        android:contentDescription="@string/route_btn_clear"
+                        android:foreground="?attr/selectableItemBackgroundBorderless"
+                        android:padding="8dp"
+                        app:srcCompat="@drawable/ic_delete"
+                        app:tint="?attr/colorOnSecondaryContainer" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:fontFamily="sans-serif"
+                        android:maxLines="1"
+                        android:text="@string/route_action_clear"
+                        android:textColor="@color/on_surface_variant"
+                        android:textSize="11sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <ImageButton
+                        android:id="@+id/route_save"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/bg_icon_circle"
+                        android:contentDescription="@string/route_btn_save"
+                        android:foreground="?attr/selectableItemBackgroundBorderless"
+                        android:padding="8dp"
+                        app:srcCompat="@drawable/ic_bookmark_add"
+                        app:tint="?attr/colorOnSecondaryContainer" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:fontFamily="sans-serif"
+                        android:maxLines="1"
+                        android:text="@string/route_action_save"
+                        android:textColor="@color/on_surface_variant"
+                        android:textSize="11sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <ImageButton
+                        android:id="@+id/route_history"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/bg_icon_circle"
+                        android:contentDescription="@string/route_btn_history"
+                        android:foreground="?attr/selectableItemBackgroundBorderless"
+                        android:padding="8dp"
+                        app:srcCompat="@drawable/ic_history"
+                        app:tint="?attr/colorOnSecondaryContainer" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:fontFamily="sans-serif"
+                        android:maxLines="1"
+                        android:text="@string/route_action_history"
+                        android:textColor="@color/on_surface_variant"
+                        android:textSize="11sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <ImageButton
+                        android:id="@+id/route_add_point"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/bg_icon_circle"
+                        android:contentDescription="@string/route_btn_add_point"
+                        android:foreground="?attr/selectableItemBackgroundBorderless"
+                        android:padding="8dp"
+                        app:srcCompat="@drawable/ic_add"
+                        app:tint="?attr/colorOnSecondaryContainer" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:fontFamily="sans-serif"
+                        android:maxLines="1"
+                        android:text="@string/route_action_add"
+                        android:textColor="@color/on_surface_variant"
+                        android:textSize="11sp" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- 展开态：操作行下面才是统计和运行状态 -->
+        <LinearLayout
+            android:id="@+id/route_controls"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/space_page"
+            android:paddingEnd="@dimen/space_page"
+            android:paddingBottom="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/bg_metric_tile"
+                android:orientation="horizontal"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/route_metric_points_label"
+                        android:textAppearance="@style/TextAppearance.App.Caption" />
+
+                    <TextView
+                        android:id="@+id/route_point_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:ellipsize="end"
+                        android:fontFeatureSettings="tnum"
+                        android:maxLines="1"
+                        android:textAppearance="@style/TextAppearance.App.Section" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/route_metric_length_label"
+                        android:textAppearance="@style/TextAppearance.App.Caption" />
+
+                    <TextView
+                        android:id="@+id/route_length"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:ellipsize="end"
+                        android:fontFeatureSettings="tnum"
+                        android:maxLines="1"
+                        android:textAppearance="@style/TextAppearance.App.Section" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/route_metric_speed_label"
+                        android:textAppearance="@style/TextAppearance.App.Caption" />
+
+                    <TextView
+                        android:id="@+id/route_speed_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:ellipsize="end"
+                        android:fontFeatureSettings="tnum"
+                        android:maxLines="1"
+                        android:textAppearance="@style/TextAppearance.App.Section" />
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/route_set_speed"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginStart="4dp"
+                    android:background="@drawable/bg_action_circle"
+                    android:contentDescription="@string/route_speed_title"
+                    android:padding="8dp"
+                    app:srcCompat="@drawable/ic_tune"
+                    app:tint="?attr/colorPrimary" />
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/route_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.App.Section" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <ImageButton
+                    android:id="@+id/route_pause"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginEnd="12dp"
+                    android:background="@drawable/bg_icon_circle"
+                    android:contentDescription="@string/route_btn_pause"
+                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                    android:padding="12dp"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/ic_route_pause"
+                    app:tint="?attr/colorOnSecondaryContainer" />
+
+                <com.github.yingsuopro.ui.RouteProgressButton
+                    android:id="@+id/route_start"
+                    android:layout_width="76dp"
+                    android:layout_height="76dp"
+                    android:contentDescription="@string/route_btn_start" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -508,7 +470,6 @@
                 android:text="@string/route_history_title"
                 android:textAppearance="@style/TextAppearance.App.Section" />
 
-            <!-- 空态：图标 + 标题 + 说明 -->
             <LinearLayout
                 android:id="@+id/route_history_no_textview"
                 android:layout_width="match_parent"
@@ -528,7 +489,7 @@
                         android:layout_gravity="center"
                         android:contentDescription="@null"
                         app:srcCompat="@drawable/ic_history"
-                        app:tint="@color/on_primary_container" />
+                        app:tint="?attr/colorOnPrimaryContainer" />
                 </FrameLayout>
 
                 <TextView

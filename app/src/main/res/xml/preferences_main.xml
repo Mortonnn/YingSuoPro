@@ -3,6 +3,17 @@
     app:iconSpaceReserved="true">
 
     <PreferenceCategory
+        app:title="@string/setting_group_appearance"
+        app:iconSpaceReserved="true">
+        <com.github.yingsuopro.ThemeColorPreference
+            app:key="setting_theme_color"
+            app:title="@string/setting_theme_color"
+            app:defaultValue="ocean"
+            app:icon="@drawable/ic_palette"
+            app:iconSpaceReserved="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
         app:title="@string/setting_group_map"
         app:iconSpaceReserved="true">
         <ListPreference
@@ -15,6 +26,17 @@
             app:useSimpleSummaryProvider="true"
             app:icon="@drawable/ic_map"
             app:iconSpaceReserved="true" />
+
+        <ListPreference
+            app:key="setting_map_theme"
+            app:title="@string/setting_map_theme"
+            app:entries="@array/array_map_theme"
+            app:entryValues="@array/array_map_theme_values"
+            app:dialogTitle="@string/setting_map_theme"
+            app:defaultValue="auto"
+            app:useSimpleSummaryProvider="true"
+            app:icon="@drawable/ic_brightness"
+            app:iconSpaceReserved="true" />
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -26,7 +48,7 @@
             app:entries="@array/array_joystick_type"
             app:entryValues="@array/array_joystick_type_values"
             app:dialogTitle="@string/setting_joystick_type"
-            app:defaultValue="0"
+            app:defaultValue="2"
             app:icon="@drawable/ic_gamepad"
             app:iconSpaceReserved="true">
         </ListPreference>
@@ -103,8 +125,15 @@
             app:key="setting_random_offset"
             app:title="@string/setting_random_offset"
             app:summary="@string/setting_random_offset_summary"
-            app:defaultValue="false"
+            app:defaultValue="true"
             app:icon="@drawable/ic_shuffle"
+            app:iconSpaceReserved="true"/>
+        <SwitchPreferenceCompat
+            app:key="setting_route_random_offset"
+            app:title="@string/setting_route_random_offset"
+            app:summary="@string/setting_route_random_offset_summary"
+            app:defaultValue="true"
+            app:icon="@drawable/ic_route"
             app:iconSpaceReserved="true"/>
         <EditTextPreference
             app:key="setting_lat_max_offset"
@@ -138,25 +167,6 @@
             app:defaultValue="@string/history_expiration"
             app:summary="@string/history_expiration"
             app:icon="@drawable/ic_history"
-            app:iconSpaceReserved="true"/>
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        app:title="@string/setting_group_about"
-        app:iconSpaceReserved="true">
-
-        <Preference
-            app:key="setting_version"
-            app:title="@string/setting_version"
-            app:icon="@drawable/ic_info"
-            app:iconSpaceReserved="true"/>
-
-        <Preference
-            app:key="setting_author"
-            app:title="@string/setting_author"
-            app:defaultValue="@string/app_author"
-            app:summary="@string/app_author"
-            app:icon="@drawable/ic_person"
             app:iconSpaceReserved="true"/>
     </PreferenceCategory>
 </PreferenceScreen>

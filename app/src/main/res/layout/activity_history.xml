@@ -76,7 +76,7 @@
                 android:contentDescription="@null"
                 android:importantForAccessibility="no"
                 app:srcCompat="@drawable/ic_history"
-                app:tint="@color/on_primary_container" />
+                app:tint="?attr/colorOnPrimaryContainer" />
         </FrameLayout>
 
         <TextView

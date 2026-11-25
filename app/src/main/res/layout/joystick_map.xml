@@ -106,7 +106,7 @@
                     android:background="@drawable/bg_action_circle"
                     android:contentDescription="@string/cur_position"
                     android:src="@drawable/ic_my_location"
-                    android:tint="@color/primary" />
+                    android:tint="?attr/colorPrimary" />
 
                 <ImageButton
                     android:id="@+id/btnGo"
@@ -118,7 +118,7 @@
                     android:contentDescription="@string/joystick_confirm_position"
                     android:foreground="?android:attr/selectableItemBackgroundBorderless"
                     android:src="@drawable/ic_position"
-                    android:tint="@color/primary" />
+                    android:tint="?attr/colorPrimary" />
             </FrameLayout>
         </FrameLayout>
     </LinearLayout>

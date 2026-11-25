@@ -38,17 +38,39 @@
             app:titleTextAppearance="@style/TextAppearance.App.Toolbar.Title" />
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- 搜索建议 / 搜索历史浮层，保留 LinearLayout 供 MainActivity 直接操作 -->
+    <!-- 主操作：开始 / 停止模拟 -->
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/faBtnStart"
+        android:layout_width="wrap_content"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom|start"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="92dp"
+        android:contentDescription="@string/fab_start_mock"
+        android:text="@string/fab_start_mock"
+        android:textColor="?attr/colorOnPrimary"
+        android:textSize="@dimen/text_button"
+        android:fontFamily="sans-serif-medium"
+        app:backgroundTint="?attr/colorPrimary"
+        app:cornerRadius="@dimen/radius_m"
+        app:elevation="2dp"
+        app:icon="@drawable/ic_navigation"
+        app:iconTint="?attr/colorOnPrimary"
+        app:iconPadding="10dp"
+        app:rippleColor="?attr/colorPrimaryContainer" />
+
+    <!-- 搜索建议 / 搜索历史浮层：与顶栏等宽，位于 FAB 之上且带更高层级 -->
     <LinearLayout
         android:id="@+id/search_linear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="92dp"
-        android:layout_marginEnd="12dp"
+        android:layout_marginStart="@dimen/top_bar_margin"
+        android:layout_marginTop="84dp"
+        android:layout_marginEnd="@dimen/top_bar_margin"
         android:background="@drawable/bg_search_panel"
-        android:elevation="3dp"
+        android:clipToOutline="true"
+        android:elevation="8dp"
         android:orientation="vertical"
         android:padding="6dp"
         android:visibility="gone">
@@ -57,8 +79,9 @@
             android:id="@+id/search_list_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:divider="@android:color/transparent"
-            android:dividerHeight="0dp" />
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:scrollbars="none" />
     </LinearLayout>
 
     <LinearLayout
@@ -66,11 +89,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="92dp"
-        android:layout_marginEnd="12dp"
+        android:layout_marginStart="@dimen/top_bar_margin"
+        android:layout_marginTop="84dp"
+        android:layout_marginEnd="@dimen/top_bar_margin"
         android:background="@drawable/bg_search_panel"
-        android:elevation="3dp"
+        android:clipToOutline="true"
+        android:elevation="8dp"
         android:orientation="vertical"
         android:padding="6dp"
         android:visibility="gone">
@@ -79,29 +103,9 @@
             android:id="@+id/search_history_list_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:divider="@android:color/transparent"
-            android:dividerHeight="0dp" />
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:scrollbars="none" />
     </LinearLayout>
-
-    <!-- 主操作：开始 / 停止模拟 -->
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/faBtnStart"
-        android:layout_width="wrap_content"
-        android:layout_height="56dp"
-        android:layout_gravity="bottom|start"
-        android:layout_marginStart="20dp"
-        android:layout_marginBottom="80dp"
-        android:contentDescription="@string/fab_start_mock"
-        android:text="@string/fab_start_mock"
-        android:textColor="@color/on_primary"
-        android:textSize="@dimen/text_button"
-        android:fontFamily="sans-serif-medium"
-        app:backgroundTint="@color/primary"
-        app:cornerRadius="@dimen/radius_m"
-        app:elevation="2dp"
-        app:icon="@drawable/ic_navigation"
-        app:iconTint="@color/on_primary"
-        app:iconPadding="10dp"
-        app:rippleColor="@color/primary_container" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

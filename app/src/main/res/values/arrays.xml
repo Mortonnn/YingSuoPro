@@ -9,16 +9,6 @@
         <item>1</item>
         <item>2</item>
     </string-array>
-    <string-array name="array_map_type">
-        <item>百度地图</item>
-        <item>高德地图</item>
-        <item>腾讯地图</item>
-    </string-array>
-    <string-array name="array_map_type_values">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-    </string-array>
     <string-array name="array_map_style">
         <item>@string/map_style_normal</item>
         <item>@string/map_style_satellite</item>
@@ -26,6 +16,16 @@
     <string-array name="array_map_style_values">
         <item>normal</item>
         <item>satellite</item>
+    </string-array>
+    <string-array name="array_map_theme">
+        <item>@string/map_theme_auto</item>
+        <item>@string/map_theme_light</item>
+        <item>@string/map_theme_dark</item>
+    </string-array>
+    <string-array name="array_map_theme_values">
+        <item>auto</item>
+        <item>light</item>
+        <item>dark</item>
     </string-array>
 
 </resources>

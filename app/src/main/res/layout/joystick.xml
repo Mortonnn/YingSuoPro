@@ -42,7 +42,7 @@
             android:background="@drawable/bg_joystick_button"
             android:contentDescription="@string/joystick_history"
             android:src="@drawable/ic_history"
-            android:tint="@color/primary" />
+            android:tint="?attr/colorPrimary" />
 
         <Space
             android:layout_width="0dp"
@@ -56,7 +56,7 @@
             android:background="@drawable/bg_joystick_button"
             android:contentDescription="@string/joystick_map"
             android:src="@drawable/ic_map"
-            android:tint="@color/primary" />
+            android:tint="?attr/colorPrimary" />
     </LinearLayout>
 
     <!-- 摇杆区：圆形 RockerView 或 3×3 ButtonView 共用一块圆角底 -->
@@ -66,13 +66,13 @@
         android:layout_marginTop="8dp"
         android:background="@drawable/bg_joystick_pad">
 
-        <com.zcshou.joystick.ButtonView
+        <com.github.yingsuopro.joystick.ButtonView
             android:id="@+id/joystick_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center" />
 
-        <com.zcshou.joystick.RockerView
+        <com.github.yingsuopro.joystick.RockerView
             android:id="@+id/joystick_rocker"
             android:layout_width="@dimen/joystick_rockerview_width"
             android:layout_height="@dimen/joystick_rockerview_height"
@@ -95,7 +95,7 @@
             android:background="@drawable/bg_joystick_button"
             android:contentDescription="@string/joystick_walk"
             android:src="@drawable/ic_walk"
-            android:tint="@color/primary" />
+            android:tint="?attr/colorPrimary" />
 
         <Space
             android:layout_width="0dp"

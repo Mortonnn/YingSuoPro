@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+        运行时主题调色板（浅色）。
+        这些颜色只由 ThemeOverlay 引用，组件本身一律使用主题属性，
+        因此切换主题色时不需要重建资源，也不需要写死任何色值。
+    -->
+
+    <!-- 青柠绿（默认） -->
+    <color name="palette_lime_primary">#386A20</color>
+    <color name="palette_lime_on_primary">#FFFFFF</color>
+    <color name="palette_lime_primary_container">#B7F397</color>
+    <color name="palette_lime_on_primary_container">#042100</color>
+    <color name="palette_lime_secondary">#55624C</color>
+    <color name="palette_lime_on_secondary">#FFFFFF</color>
+    <color name="palette_lime_secondary_container">#D9E7CB</color>
+    <color name="palette_lime_on_secondary_container">#131F0D</color>
+    <color name="palette_lime_tertiary">#386667</color>
+    <color name="palette_lime_on_tertiary">#FFFFFF</color>
+    <color name="palette_lime_tertiary_container">#BBEBEC</color>
+    <color name="palette_lime_on_tertiary_container">#002020</color>
+
+    <!-- 海湾蓝 -->
+    <color name="palette_ocean_primary">#00639B</color>
+    <color name="palette_ocean_on_primary">#FFFFFF</color>
+    <color name="palette_ocean_primary_container">#CDE5FF</color>
+    <color name="palette_ocean_on_primary_container">#001D33</color>
+    <color name="palette_ocean_secondary">#4F616E</color>
+    <color name="palette_ocean_on_secondary">#FFFFFF</color>
+    <color name="palette_ocean_secondary_container">#D2E5F4</color>
+    <color name="palette_ocean_on_secondary_container">#0B1D29</color>
+    <color name="palette_ocean_tertiary">#3F6375</color>
+    <color name="palette_ocean_on_tertiary">#FFFFFF</color>
+    <color name="palette_ocean_tertiary_container">#C2E8FC</color>
+    <color name="palette_ocean_on_tertiary_container">#001F2A</color>
+
+    <!-- 暮光紫 -->
+    <color name="palette_violet_primary">#6750A4</color>
+    <color name="palette_violet_on_primary">#FFFFFF</color>
+    <color name="palette_violet_primary_container">#EADDFF</color>
+    <color name="palette_violet_on_primary_container">#21005D</color>
+    <color name="palette_violet_secondary">#625B71</color>
+    <color name="palette_violet_on_secondary">#FFFFFF</color>
+    <color name="palette_violet_secondary_container">#E8DEF8</color>
+    <color name="palette_violet_on_secondary_container">#1D192B</color>
+    <color name="palette_violet_tertiary">#7D5260</color>
+    <color name="palette_violet_on_tertiary">#FFFFFF</color>
+    <color name="palette_violet_tertiary_container">#FFD8E4</color>
+    <color name="palette_violet_on_tertiary_container">#31111D</color>
+
+    <!-- 日落橙 -->
+    <color name="palette_sunset_primary">#8B5000</color>
+    <color name="palette_sunset_on_primary">#FFFFFF</color>
+    <color name="palette_sunset_primary_container">#FFDDB6</color>
+    <color name="palette_sunset_on_primary_container">#2B1700</color>
+    <color name="palette_sunset_secondary">#6F5A40</color>
+    <color name="palette_sunset_on_secondary">#FFFFFF</color>
+    <color name="palette_sunset_secondary_container">#FADEC0</color>
+    <color name="palette_sunset_on_secondary_container">#271904</color>
+    <color name="palette_sunset_tertiary">#855318</color>
+    <color name="palette_sunset_on_tertiary">#FFFFFF</color>
+    <color name="palette_sunset_tertiary_container">#FFDDB6</color>
+    <color name="palette_sunset_on_tertiary_container">#2B1700</color>
+
+    <!-- 樱花粉 -->
+    <color name="palette_rose_primary">#9A4146</color>
+    <color name="palette_rose_on_primary">#FFFFFF</color>
+    <color name="palette_rose_primary_container">#FFDADA</color>
+    <color name="palette_rose_on_primary_container">#400009</color>
+    <color name="palette_rose_secondary">#76565A</color>
+    <color name="palette_rose_on_secondary">#FFFFFF</color>
+    <color name="palette_rose_secondary_container">#FFDADA</color>
+    <color name="palette_rose_on_secondary_container">#2C1517</color>
+    <color name="palette_rose_tertiary">#7B5732</color>
+    <color name="palette_rose_on_tertiary">#FFFFFF</color>
+    <color name="palette_rose_tertiary_container">#FFDDB8</color>
+    <color name="palette_rose_on_tertiary_container">#2A1700</color>
+
+    <!-- Liquid Glass 语义色（浅色） -->
+    <color name="glass_surface">#E8FFFFFF</color>
+    <color name="glass_surface_strong">#F5FFFFFF</color>
+    <color name="glass_border">#80FFFFFF</color>
+    <color name="glass_highlight">#B3FFFFFF</color>
+    <color name="glass_shadow">#14000000</color>
+</resources>

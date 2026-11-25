@@ -2,52 +2,59 @@
 <resources>
     <!--
         Material 3 Expressive 配色（浅色）。
-        以品牌绿 #386A20 为 seed 生成完整 tonal palette，所有组件只使用语义角色，
+        以品牌蓝 #00639B 为 seed 生成完整 tonal palette，所有组件只使用语义角色，
         不在布局里写死色值。深色对应值见 values-night/colors.xml。
     -->
-    <color name="primary">#386A20</color>
+    <color name="primary">#00639B</color>
     <color name="on_primary">#FFFFFF</color>
-    <color name="primary_container">#B7F397</color>
-    <color name="on_primary_container">#042100</color>
-    <color name="secondary">#55624C</color>
+    <color name="primary_container">#CDE5FF</color>
+    <color name="on_primary_container">#001D33</color>
+    <color name="secondary">#4F616E</color>
     <color name="on_secondary">#FFFFFF</color>
-    <color name="secondary_container">#D9E7CB</color>
-    <color name="on_secondary_container">#131F0D</color>
-    <color name="tertiary">#386667</color>
+    <color name="secondary_container">#D2E5F4</color>
+    <color name="on_secondary_container">#0B1D29</color>
+    <color name="tertiary">#3F6375</color>
     <color name="on_tertiary">#FFFFFF</color>
-    <color name="tertiary_container">#BBEBEC</color>
-    <color name="on_tertiary_container">#002020</color>
+    <color name="tertiary_container">#C2E8FC</color>
+    <color name="on_tertiary_container">#001F2A</color>
     <color name="error">#BA1A1A</color>
     <color name="on_error">#FFFFFF</color>
     <color name="error_container">#FFDAD6</color>
     <color name="on_error_container">#410002</color>
 
-    <color name="background">#F8FAF2</color>
-    <color name="on_background">#1A1C18</color>
-    <color name="surface">#F8FAF2</color>
-    <color name="on_surface">#1A1C18</color>
-    <color name="surface_variant">#E1E4D6</color>
-    <color name="on_surface_variant">#43483E</color>
+    <color name="background">#F7F9FC</color>
+    <color name="on_background">#191C20</color>
+    <color name="surface">#F7F9FC</color>
+    <color name="on_surface">#191C20</color>
+    <color name="surface_variant">#E2E6EE</color>
+    <color name="on_surface_variant">#44474E</color>
     <color name="surface_container_lowest">#FFFFFF</color>
-    <color name="surface_container_low">#F2F4EB</color>
-    <color name="surface_container">#ECEFE5</color>
-    <color name="surface_container_high">#E6E9DF</color>
-    <color name="surface_container_highest">#E0E4DA</color>
-    <color name="outline">#74796D</color>
-    <color name="outline_variant">#C3C8BB</color>
-    <color name="inverse_surface">#2F312C</color>
-    <color name="inverse_on_surface">#F1F2E9</color>
+    <color name="surface_container_low">#F1F4F9</color>
+    <color name="surface_container">#E9EDF4</color>
+    <color name="surface_container_high">#E2E7EF</color>
+    <color name="surface_container_highest">#DCE2EB</color>
+    <color name="outline">#74777D</color>
+    <color name="outline_variant">#C4C7CF</color>
+    <color name="inverse_surface">#2F3033</color>
+    <color name="inverse_on_surface">#F1F2F5</color>
     <color name="inverse_primary">#9CD67E</color>
     <color name="scrim">#000000</color>
 
+    <!-- 启动图标：随主题色切换 -->
+    <color name="launcher_lime">#386A20</color>
+    <color name="launcher_ocean">#00639B</color>
+    <color name="launcher_violet">#6750A4</color>
+    <color name="launcher_sunset">#8B5000</color>
+    <color name="launcher_rose">#9A4146</color>
+
     <!-- 地图与品牌 -->
     <color name="map_location_blue">#1A73E8</color>
-    <color name="route_line">#386A20</color>
-    <color name="map_surface_tint">#EAF2E4</color>
+    <color name="route_line">#00639B</color>
+    <color name="map_surface_tint">#EAF2F8</color>
 
     <!-- 旧命名兼容（Java / 历史 drawable 仍在引用） -->
     <color name="colorPrimary">@color/primary</color>
-    <color name="colorPrimaryDark">#1F5219</color>
+    <color name="colorPrimaryDark">#004A75</color>
     <color name="colorAccent">@color/primary</color>
     <color name="app_background">@color/background</color>
     <color name="muted">@color/on_surface_variant</color>
